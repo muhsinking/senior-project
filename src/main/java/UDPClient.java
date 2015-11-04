@@ -17,7 +17,9 @@ class UDPClient
         InetAddress IPAddress = InetAddress.getByName("localhost");
         byte[] sendData = new byte[2048];
         byte[] receiveData = new byte[2048];
+
 //        String sentence = inFromUser.readLine();
+
         sendData = BU.longToBytes(date.getTime());
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
         clientSocket.send(sendPacket);
@@ -27,4 +29,6 @@ class UDPClient
         System.out.println("FROM SERVER:" + modifiedSentence);
         clientSocket.close();
     }
+
+
 }
