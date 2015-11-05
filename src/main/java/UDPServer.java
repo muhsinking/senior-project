@@ -13,8 +13,7 @@ public class UDPServer
         byte[] receiveData = new byte[2048];
         byte[] sendData = new byte[2048];
 
-        while(true)
-        {
+//        while(true){
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             serverSocket.receive(receivePacket);
             String sentence = new String( receivePacket.getData());
@@ -28,6 +27,6 @@ public class UDPServer
             DatagramPacket sendPacket =
                     new DatagramPacket(sendData, sendData.length, IPAddress, port);
             serverSocket.send(sendPacket);
-        }
+//        }
     }
 }
