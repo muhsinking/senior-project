@@ -12,12 +12,12 @@ public class UDPServer
 
     DatagramSocket socket;
 
-    public UDPServer() throws Exception{
-        socket = new DatagramSocket(9876);
+    public void startServer(int port) throws SocketException{
+        socket = new DatagramSocket(port);
     }
 
-    public UDPServer(int port) throws Exception{
-        socket = new DatagramSocket(port);
+    public void closeServer(){
+        if(socket != null) socket = null;
     }
 
     public void send(byte[] data, InetAddress IP, int port) throws IOException{
@@ -26,24 +26,49 @@ public class UDPServer
     }
 
     public DatagramPacket receive() throws IOException{
-        byte[] data = new byte[RECIEVESIZE];
-        DatagramPacket packet = new DatagramPacket(data, data.length);
-        socket.receive(packet);
-        return packet;
+        if(socket != null){
+            byte[] data = new byte[RECIEVESIZE];
+            DatagramPacket packet = new DatagramPacket(data, data.length);
+            socket.receive(packet);
+            return packet;
+        }
+        throw new NullPointerException("server not started");
+    }
+
+    public static String getString(DatagramPacket packet){
+        return new String(packet.getData(),0,packet.getLength()).trim();
+    }
+
+    public void run() throws Exception{
+        try{
+            startServer(9876);
+
+            while(true){
+
+                try{
+                    DatagramPacket receivePacket = receive();
+                    String sentence = getString(receivePacket);
+                    System.out.println("RECEIVED: " + sentence);
+                    String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
+                    byte [] sendData = capitalizedSentence.getBytes();
+                    send(sendData, receivePacket.getAddress(), receivePacket.getPort());
+                }
+
+               catch (IOException err){
+                   System.out.println("Error establishing connection "+err.getMessage());
+               }
+            }
+
+        }
+        catch (SocketException err){
+            System.out.println("Couldn't connect to port "+err.getMessage());
+        }
+
     }
 
     public static void main(String args[]) throws Exception
     {
         UDPServer server = new UDPServer();
-
-        DatagramPacket receivePacket = server.receive();
-
-        String sentence = new String(receivePacket.getData());
-
-        System.out.println("RECEIVED: " + sentence);
-
-        String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
-        byte [] sendData = capitalizedSentence.getBytes();
-        server.send(sendData, receivePacket.getAddress(), receivePacket.getPort());
+        server.run();
     }
 }
