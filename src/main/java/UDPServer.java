@@ -7,26 +7,43 @@ import java.util.Date;
 
 public class UDPServer
 {
+    final static int RECIEVESIZE = 2048;
+    final static int SENDSIZE = 2048;
+
+    DatagramSocket socket;
+
+    public UDPServer() throws Exception{
+        socket = new DatagramSocket(9876);
+    }
+
+    public UDPServer(int port) throws Exception{
+        socket = new DatagramSocket(port);
+    }
+
+    public void send(byte[] data, InetAddress IP, int port) throws IOException{
+        DatagramPacket packet = new DatagramPacket(data, data.length, IP, port);
+        socket.send(packet);
+    }
+
+    public DatagramPacket receive() throws IOException{
+        byte[] data = new byte[RECIEVESIZE];
+        DatagramPacket packet = new DatagramPacket(data, data.length);
+        socket.receive(packet);
+        return packet;
+    }
+
     public static void main(String args[]) throws Exception
     {
-        DatagramSocket serverSocket = new DatagramSocket(9876);
-        byte[] receiveData = new byte[2048];
-        byte[] sendData = new byte[2048];
+        UDPServer server = new UDPServer();
 
-//        while(true){
-            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-            serverSocket.receive(receivePacket);
-            String sentence = new String( receivePacket.getData());
-            System.out.println("RECEIVED: " + sentence);
+        DatagramPacket receivePacket = server.receive();
 
-            // Send back through the same packet/address you received
-            InetAddress IPAddress = receivePacket.getAddress();
-            int port = receivePacket.getPort();
-            String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
-            sendData = capitalizedSentence.getBytes();
-            DatagramPacket sendPacket =
-                    new DatagramPacket(sendData, sendData.length, IPAddress, port);
-            serverSocket.send(sendPacket);
-//        }
+        String sentence = new String(receivePacket.getData());
+
+        System.out.println("RECEIVED: " + sentence);
+
+        String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
+        byte [] sendData = capitalizedSentence.getBytes();
+        server.send(sendData, receivePacket.getAddress(), receivePacket.getPort());
     }
 }
