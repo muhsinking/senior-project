@@ -17,15 +17,32 @@ class UDPClient
         byte[] sendData = new byte[2048];
         byte[] receiveData = new byte[2048];
 
-//        String sentence = inFromUser.readLine();
+        String sentence = inFromUser.readLine();
 
-        sendData = ByteUtils.longToBytes(date.getTime());
+//        sendData = ByteUtils.longToBytes(sendTime);
+
+        sendData = sentence.getBytes();
+
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+
+        long sendTime = date.getTime();
+
         clientSocket.send(sendPacket);
+
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
         clientSocket.receive(receivePacket);
+
+        long receiveTime = date.getTime();
+
+        long elapsedTime = receiveTime-sendTime;
+
         String modifiedSentence = new String(receivePacket.getData());
-        System.out.println("FROM SERVER:" + modifiedSentence);
+
+        System.out.println("FROM SERVER: " + modifiedSentence);
+
+        System.out.println("Time elapsed: " + elapsedTime + " milliseconds.");
+
         clientSocket.close();
     }
 
