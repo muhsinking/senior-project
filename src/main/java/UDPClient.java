@@ -10,7 +10,6 @@ class UDPClient
 {
     public static void main(String args[]) throws Exception
     {
-        ByteUtils BU = new ByteUtils();
         Date date = new Date();
         BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         DatagramSocket clientSocket = new DatagramSocket();
@@ -20,7 +19,7 @@ class UDPClient
 
 //        String sentence = inFromUser.readLine();
 
-        sendData = BU.longToBytes(date.getTime());
+        sendData = ByteUtils.longToBytes(date.getTime());
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
         clientSocket.send(sendPacket);
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
