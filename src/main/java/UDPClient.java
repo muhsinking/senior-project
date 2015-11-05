@@ -19,13 +19,13 @@ class UDPClient
 
         String sentence = inFromUser.readLine();
 
-//        sendData = ByteUtils.longToBytes(sendTime);
-
         sendData = sentence.getBytes();
 
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
 
-        long sendTime = date.getTime();
+        long startTime = date.getTime();
+
+        byte [] sendTime = ByteUtils.longToBytes(startTime);
 
         clientSocket.send(sendPacket);
 
@@ -35,7 +35,7 @@ class UDPClient
 
         long receiveTime = date.getTime();
 
-        long elapsedTime = receiveTime-sendTime;
+        long elapsedTime = receiveTime-startTime;
 
         String modifiedSentence = new String(receivePacket.getData());
 

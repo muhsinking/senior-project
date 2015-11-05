@@ -12,8 +12,8 @@ class ByteUtilsTest extends GroovyTestCase {
 
     }
 
-    void testBytesToLong() {
 
+    void testBytesToLong() {
         def result = bu.bytesToLong(longArray)
         assert result == x
     }
