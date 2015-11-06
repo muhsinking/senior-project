@@ -15,7 +15,7 @@ class UDPClient
         DatagramSocket clientSocket = new DatagramSocket();
         InetAddress IPAddress = InetAddress.getByName("localhost");
         byte[] sendData = new byte[2048];
-        byte[] receiveData = new byte[20480];
+        byte[] receiveData = new byte[2048];
 
         String sentence = inFromUser.readLine();
 
