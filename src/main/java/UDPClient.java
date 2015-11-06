@@ -25,8 +25,6 @@ class UDPClient
 
         long startTime = System.nanoTime();
 
-//        Thread.sleep(1000);
-
         byte [] sendTime = ByteUtils.longToBytes(startTime);
 
         clientSocket.send(sendPacket);

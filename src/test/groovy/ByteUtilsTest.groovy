@@ -9,12 +9,16 @@ class ByteUtilsTest extends GroovyTestCase {
     void testLongToBytes() {
         def result = ByteUtils.longToBytes(x)
         assert result == longArray
-
     }
 
     void testBytesToLong() {
-
         def result = ByteUtils.bytesToLong(longArray)
         assert result == x
+    }
+
+    void testGetTrimString() {
+        byte[] data = [116, 101, 115, 116, 32, 32, 32, 32]
+        String str = ByteUtils.getTrimString(new DatagramPacket(data,data.length))
+        assert(str.equals("test"))
     }
 }

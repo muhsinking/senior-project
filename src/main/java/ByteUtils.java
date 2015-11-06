@@ -1,10 +1,12 @@
 /**
  * Created by muhsinking on 11/4/15.
  */
+import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
 
 public class ByteUtils {
+
     private static ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE); // size, not bytes
 
     public static byte[] longToBytes(long x) {
@@ -17,4 +19,10 @@ public class ByteUtils {
         buffer.flip(); //need flip
         return buffer.getLong();
     }
+
+    public static String getTrimString(DatagramPacket packet){
+        return new String(packet.getData(),0,packet.getLength()).trim();
+    }
+
+
 }

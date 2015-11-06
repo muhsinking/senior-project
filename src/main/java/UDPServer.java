@@ -3,7 +3,6 @@
  */
 import java.io.*;
 import java.net.*;
-import java.util.Date;
 
 public class UDPServer
 {
@@ -16,9 +15,7 @@ public class UDPServer
         socket = new DatagramSocket(port);
     }
 
-    public void closeServer(){
-        if(socket != null) socket = null;
-    }
+    public void closeServer(){if(socket != null) socket = null;}
 
     public void send(byte[] data, InetAddress IP, int port) throws IOException{
         DatagramPacket packet = new DatagramPacket(data, data.length, IP, port);
@@ -35,9 +32,6 @@ public class UDPServer
         throw new NullPointerException("server not started");
     }
 
-    public static String getString(DatagramPacket packet){
-        return new String(packet.getData(),0,packet.getLength()).trim();
-    }
 
     public void run() throws Exception{
         try{
@@ -47,7 +41,7 @@ public class UDPServer
 
                 try{
                     DatagramPacket receivePacket = receive();
-                    String sentence = getString(receivePacket);
+                    String sentence = ByteUtils.getTrimString(receivePacket);
                     System.out.println("RECEIVED: " + sentence);
                     String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
                     byte [] sendData = capitalizedSentence.getBytes();
