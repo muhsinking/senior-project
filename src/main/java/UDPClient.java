@@ -52,7 +52,7 @@ public class UDPClient {
 
     public static void main(String args[]) throws Exception {
         UDPClient client = new UDPClient();
-        long result = client.avgIntraProbeGap(500);
+        long result = client.avgIntraProbeGap(100);
         System.out.println(result);
         client.socket.close();
     }
