@@ -28,8 +28,8 @@ public class UDPClient {
         byte[]  send1 = new byte[2048],
                 send2 = new byte[2048];
         DatagramPacket receive1, receive2;
-        InetAddress IP = InetAddress.getByName("localhost");
-
+//        InetAddress IP = InetAddress.getByName("localhost");
+        InetAddress IP = InetAddress.getByName("10.70.170.166");
         send(send1, IP, 9876);
         send(send2, IP, 9876);
 
