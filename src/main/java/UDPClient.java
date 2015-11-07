@@ -38,14 +38,14 @@ public class UDPClient
         send(send1, IP, 9876);
         send(send2, IP, 9876);
 
-        long startTime = System.nanoTime();
+
 
         receive1 = receive();
+        long receive1Time = System.nanoTime();
         receive2 = receive();
+        long receive2Time = System.nanoTime();
 
-        long receiveTime = System.nanoTime();
-
-        long elapsedTime = (receiveTime-startTime)/1000; // convert to microseconds
+        long elapsedTime = (receive2Time-receive1Time)/1000; // convert to microseconds
 
         System.out.println(elapsedTime);
 
