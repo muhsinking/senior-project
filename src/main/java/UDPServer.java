@@ -4,14 +4,13 @@
 import java.io.*;
 import java.net.*;
 
-public class UDPServer
-{
+public class UDPServer {
     final static int RECIEVESIZE = 2048;
     final static int SENDSIZE = 2048;
 
     DatagramSocket socket;
 
-    public void startServer(int port) throws SocketException{
+    public void startServer(int port) throws SocketException {
         socket = new DatagramSocket(port);
     }
 
@@ -22,7 +21,7 @@ public class UDPServer
         socket.send(packet);
     }
 
-    public DatagramPacket receive() throws IOException{
+    public DatagramPacket receive() throws IOException {
         if(socket != null){
             byte[] data = new byte[RECIEVESIZE];
             DatagramPacket packet = new DatagramPacket(data, data.length);
@@ -32,8 +31,7 @@ public class UDPServer
         throw new NullPointerException("server not started");
     }
 
-
-    public void run() throws Exception{
+    public void run() throws Exception {
         try{
             startServer(9876);
 
@@ -48,21 +46,17 @@ public class UDPServer
 //                    send(sendData, receivePacket.getAddress(), receivePacket.getPort());
                     socket.send(receivePacket);
                 }
-
                catch (IOException err){
                    System.out.println("Error establishing connection "+err.getMessage());
                }
             }
-
         }
         catch (SocketException err){
             System.out.println("Couldn't connect to port "+err.getMessage());
         }
-
     }
 
-    public static void main(String args[]) throws Exception
-    {
+    public static void main(String args[]) throws Exception {
         UDPServer server = new UDPServer();
         server.run();
     }
