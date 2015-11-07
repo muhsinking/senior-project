@@ -41,11 +41,12 @@ public class UDPServer
 
                 try{
                     DatagramPacket receivePacket = receive();
-                    String sentence = ByteUtils.getTrimString(receivePacket);
-                    System.out.println("RECEIVED: " + sentence);
-                    String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
-                    byte [] sendData = capitalizedSentence.getBytes();
-                    send(sendData, receivePacket.getAddress(), receivePacket.getPort());
+//                    String sentence = ByteUtils.getTrimString(receivePacket);
+//                    System.out.println("RECEIVED: " + sentence);
+//                    String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
+//                    byte [] sendData = capitalizedSentence.getBytes();
+//                    send(sendData, receivePacket.getAddress(), receivePacket.getPort());
+                    socket.send(receivePacket);
                 }
 
                catch (IOException err){

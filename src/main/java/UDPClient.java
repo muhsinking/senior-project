@@ -4,46 +4,58 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.Date;
 
-class UDPClient
+public class UDPClient
 {
-    public static void main(String args[]) throws Exception
-    {
-        Date date = new Date();
-        BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-        DatagramSocket clientSocket = new DatagramSocket();
-        InetAddress IPAddress = InetAddress.getByName("localhost");
-        byte[] sendData = new byte[2048];
-        byte[] receiveData = new byte[2048];
+    DatagramSocket socket;
 
-        String sentence = inFromUser.readLine();
+    public UDPClient() throws SocketException {
+        socket = new DatagramSocket();
+    }
 
-        sendData = sentence.getBytes();
+    public DatagramPacket receive() throws IOException{
+        byte[] data = new byte[2048];
+        DatagramPacket packet = new DatagramPacket(data, data.length);
+        socket.receive(packet);
+        return packet;
+    }
 
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+    public void send(byte[] data, InetAddress IP, int port) throws IOException{
+        DatagramPacket packet = new DatagramPacket(data, data.length, IP, port);
+        socket.send(packet);
+    }
+
+    public void sendPacketPair() throws IOException {
+        byte[]  send1 = new byte[2048],
+                send2 = new byte[2048];
+
+        DatagramPacket receive1, receive2;
+
+        InetAddress IP = InetAddress.getByName("localhost");
+
+
+
+        send(send1, IP, 9876);
+        send(send2, IP, 9876);
 
         long startTime = System.nanoTime();
 
-        byte [] sendTime = ByteUtils.longToBytes(startTime);
-
-        clientSocket.send(sendPacket);
-
-        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-
-        clientSocket.receive(receivePacket);
+        receive1 = receive();
+        receive2 = receive();
 
         long receiveTime = System.nanoTime();
 
-        long elapsedTime = (receiveTime-startTime)/1000000; // convert to milliseconds
+        long elapsedTime = (receiveTime-startTime)/1000; // convert to microseconds
 
-        String modifiedSentence = new String(receivePacket.getData());
+        System.out.println(elapsedTime);
 
-        System.out.println("FROM SERVER: " + modifiedSentence);
+        socket.close();
+    }
 
-        System.out.println("Time elapsed: " + elapsedTime + " milliseconds.");
-
-        clientSocket.close();
+    public static void main(String args[]) throws Exception
+    {
+        UDPClient client = new UDPClient();
+        client.sendPacketPair();
     }
 
 
