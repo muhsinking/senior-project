@@ -24,30 +24,37 @@ public class UDPClient {
         socket.send(packet);
     }
 
-    public void sendPacketPair() throws IOException {
+    //returns time difference between two packet receipts, the "intra-probe gap"
+    public long sendPacketPairIPG() throws IOException {
         byte[]  send1 = new byte[2048],
                 send2 = new byte[2048];
         DatagramPacket receive1, receive2;
-//        InetAddress IP = InetAddress.getByName("localhost");
         InetAddress IP = InetAddress.getByName("10.70.170.166");
         send(send1, IP, 9876);
         send(send2, IP, 9876);
 
-        receive1 = receive();
         long receive1Time = System.nanoTime();
-        receive2 = receive();
+        receive1 = receive();
         long receive2Time = System.nanoTime();
+        receive2 = receive();
 
-        long elapsedTime = (receive2Time-receive1Time)/1000; // convert to microseconds
+        long intraProbeGap = (receive2Time-receive1Time)/1000; // convert to microseconds
 
-        System.out.println(elapsedTime);
+        return intraProbeGap;
+    }
 
-        socket.close();
+    // intra probe gap in microseconds, averaged over n executions
+    public long avgIntraProbeGap(int n) throws IOException {
+        long sum = 0;
+        for(int i = 0; i < n; i++){ sum += sendPacketPairIPG(); }
+        return sum/n;
     }
 
     public static void main(String args[]) throws Exception {
         UDPClient client = new UDPClient();
-        client.sendPacketPair();
+        long result = client.avgIntraProbeGap(500);
+        System.out.println(result);
+        client.socket.close();
     }
 
 }
