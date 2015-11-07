@@ -40,7 +40,7 @@ public class UDPServer {
                 try{
                     DatagramPacket receivePacket = receive();
 //                    String sentence = ByteUtils.getTrimString(receivePacket);
-//                    System.out.println("RECEIVED: " + sentence);
+                    System.out.println("Received " + receivePacket.getData().length + " bytes.");
 //                    String capitalizedSentence = sentence.toUpperCase(); // Capitalize the string received
 //                    byte [] sendData = capitalizedSentence.getBytes();
 //                    send(sendData, receivePacket.getAddress(), receivePacket.getPort());
