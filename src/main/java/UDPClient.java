@@ -29,7 +29,9 @@ public class UDPClient {
         byte[]  send1 = new byte[2048],
                 send2 = new byte[2048];
         DatagramPacket receive1, receive2;
-        InetAddress IP = InetAddress.getByName("10.70.170.166");
+//        InetAddress IP = InetAddress.getByName("10.70.170.166");
+	InetAddress IP = InetAddress.getByName("169.254.5.28");
+	 
         send(send1, IP, 9876);
         send(send2, IP, 9876);
 
@@ -52,7 +54,7 @@ public class UDPClient {
 
     public static void main(String args[]) throws Exception {
         UDPClient client = new UDPClient();
-        long result = client.avgIntraProbeGap(100);
+        long result = client.avgIntraProbeGap(2000);
         System.out.println(result);
         client.socket.close();
     }
