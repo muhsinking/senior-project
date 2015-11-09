@@ -53,16 +53,16 @@ public class UDPServer {
         DatagramPacket trialPacket = receive(4);
         DatagramPacket sizePacket = receive(4);
         socket.send(sizePacket);
-        int n = ByteUtils.bytesToInt(trialPacket.getData()), size = ByteUtils.bytesToInt(sizePacket.getData()), fails = 0;
+        int n = ByteUtils.bytesToInt(trialPacket.getData()), size = ByteUtils.bytesToInt(sizePacket.getData());
         long sum = 0;
 
         for(int i = 0; i < n; i++){
             long time = packetPairIPG(size);
             if(time >= 0) sum += time;
-            else fails ++;
+            else return -1; // returns -1 if any of the trials fails
         }
 
-        return sum / (n-fails);
+        return sum / n;
     }
 
     public void receiveContinuous (int size) throws IOException {
