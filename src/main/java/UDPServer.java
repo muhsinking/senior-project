@@ -5,7 +5,6 @@ import java.io.*;
 import java.net.*;
 
 public class UDPServer {
-    final static int RECEIVE = 1024;
 
     DatagramSocket socket;
 

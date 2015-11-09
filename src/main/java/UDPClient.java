@@ -14,8 +14,8 @@ public class UDPClient {
     }
 
     // returns the next packet received
-    public DatagramPacket receive() throws IOException {
-        byte[] data = new byte[1024];
+    public DatagramPacket receive(int size) throws IOException {
+        byte[] data = new byte[size];
         DatagramPacket packet = new DatagramPacket(data, data.length);
         socket.receive(packet);
         return packet;
@@ -28,18 +28,18 @@ public class UDPClient {
     }
 
     //returns time difference between two packet receipts, the "intra-probe gap"
-    public long packetPairIPG(String address, int port) throws IOException {
-        byte[]  send1 = new byte[1024],
-                send2 = new byte[1024];
+    public long packetPairIPG(int size, String address, int port) throws IOException {
+        byte[]  send1 = new byte[size],
+                send2 = new byte[size];
         DatagramPacket receive1, receive2;
 	    InetAddress IP = InetAddress.getByName(address);
 	 
         send(send1, IP, port);
         send(send2, IP, port);
 
-        receive1 = receive();
+        receive1 = receive(size);
         long receive1Time = System.nanoTime();
-        receive2 = receive();
+        receive2 = receive(size);
         long receive2Time = System.nanoTime();
 
         long intraProbeGap = (receive2Time-receive1Time)/1000; // convert to microseconds
@@ -51,10 +51,10 @@ public class UDPClient {
     public long avgPairIPG(int n, int size, String address, int port) throws IOException {
         sendInt(n, address, port);  // send a single int, indicating the number of packet pairs the server should expect to receive
         sendInt(size, address, port); // send a single int, indicating the size of the packets the server should expect to receive
-        DatagramPacket confirmation = receive();  // waits to receive confirmation from the server
+        DatagramPacket confirmation = receive(4);  // waits to receive confirmation from the server
 
         long sum = 0;
-        for(int i = 0; i < n; i++){ sum += packetPairIPG(address,port); }
+        for(int i = 0; i < n; i++){ sum += packetPairIPG(size, address,port); }
         return sum/n;
     }
 
