@@ -5,8 +5,8 @@ import java.io.*;
 import java.net.*;
 
 public class UDPServer {
-    final static int RECIEVESIZE = 2048;
-    final static int SENDSIZE = 2048;
+    final static int RECIEVESIZE = 1024;
+    final static int SENDSIZE = 1024;
 
     DatagramSocket socket;
 
@@ -29,6 +29,27 @@ public class UDPServer {
             return packet;
         }
         throw new NullPointerException("server not started");
+    }
+
+    public long recievePacketPairIPG(){
+        long intraProbeGap = -1;
+        try{
+            DatagramPacket receivePacket1 = receive();
+            long receiveTime1 = System.nanoTime();
+            DatagramPacket receivePacket2 = receive();
+            long receiveTime2 = System.nanoTime();
+            socket.send(receivePacket2);
+            socket.send(receivePacket1);
+            intraProbeGap = (receiveTime2 - receiveTime1) / 1000;
+        }
+        catch (IOException err){
+            System.out.println("Error establishing connection "+err.getMessage());
+        }
+        return intraProbeGap;
+    }
+
+    public void avgIntraProbeGap(int n){
+
     }
 
     public void run() throws Exception {

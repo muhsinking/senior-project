@@ -9,8 +9,12 @@ public class ByteUtils {
 
     private static ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE); // size, not bytes
 
-    public static byte[] longToBytes(long x) {
-        buffer.putLong(0, x);
+    public static byte[] intToBytes(int n) {
+        return ByteBuffer.allocate(4).putInt(n).array();
+    }
+
+    public static byte[] longToBytes(long n) {
+        buffer.putLong(0, n);
         return buffer.array();
     }
 
