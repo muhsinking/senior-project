@@ -35,9 +35,10 @@ public class UDPServer extends UDPSendReceive{
     // intra-probe gap between packet pair in microseconds, averaged over n executions
     public long avgPairIPG() throws IOException{
         DatagramPacket trialPacket = receive(4);
+        int n = ByteUtils.bytesToInt(trialPacket.getData());
         DatagramPacket sizePacket = receive(4);
+        int size = ByteUtils.bytesToInt(sizePacket.getData());
         socket.send(sizePacket);
-        int n = ByteUtils.bytesToInt(trialPacket.getData()), size = ByteUtils.bytesToInt(sizePacket.getData());
         long sum = 0;
 
         for(int i = 0; i < n; i++){
@@ -45,19 +46,20 @@ public class UDPServer extends UDPSendReceive{
             if(time >= 0) sum += time;
             else return -1; // returns -1 if any of the trials fails
         }
-
+        sendInt((int)(sum/n),sizePacket.getAddress(),sizePacket.getPort());
         return sum / n;
     }
 
-    public void receiveContinuous (int size) throws IOException {
+    public void continuousIPG() throws IOException {
         while(true){
-            DatagramPacket receivePacket = receive(size);
+            long avgIPG = avgPairIPG();
+
+            System.out.println(avgIPG);
         }
     }
 
     public static void main(String args[]) throws Exception {
         UDPServer server = new UDPServer(9876);
-        long avgIPG = server.avgPairIPG();
-        System.out.println(avgIPG);
+        server.continuousIPG();
     }
 }

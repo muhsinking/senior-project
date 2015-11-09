@@ -1,8 +1,5 @@
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 
 /**
  * Created by muhsinking on 11/9/15.
@@ -14,6 +11,12 @@ public class UDPSendReceive {
     public void send(byte[] data, InetAddress IP, int port) throws IOException {
         DatagramPacket packet = new DatagramPacket(data, data.length, IP, port);
         socket.send(packet);
+    }
+
+    // sends a single int
+    public void sendInt(int n, InetAddress IP, int port) throws IOException {
+        byte [] num = ByteUtils.intToBytes(n);
+        send(num, IP, port);
     }
 
     // returns the next packet received of a given size

@@ -12,11 +12,10 @@ public class UDPClient extends UDPSendReceive{
     }
 
     //returns time difference between two packet receipts, the "intra-probe gap"
-    public long packetPairIPG(int size, String address, int port) throws IOException {
+    public long packetPairIPG(int size, InetAddress IP, int port) throws IOException {
         byte[]  send1 = new byte[size],
                 send2 = new byte[size];
         DatagramPacket receive1, receive2;
-	    InetAddress IP = InetAddress.getByName(address);
 
         send(send1, IP, port);
         send(send2, IP, port);
@@ -32,27 +31,21 @@ public class UDPClient extends UDPSendReceive{
     }
 
     // intra-probe gap between packet pair in microseconds, averaged over n executions
-    public long avgPairIPG(int n, int size, String address, int port) throws IOException {
-        sendInt(n, address, port);  // send a single int, indicating the number of packet pairs the server should expect to receive
-        sendInt(size, address, port); // send a single int, indicating the size of the packets the server should expect to receive
+    public long avgPairIPG(int n, int size, InetAddress IP, int port) throws IOException {
+        sendInt(n, IP, port);  // send a single int, indicating the number of packet pairs the server should expect to receive
+        sendInt(size, IP, port); // send a single int, indicating the size of the packets the server should expect to receive
         DatagramPacket confirmation = receive(4);  // waits to receive confirmation from the server
 
         long sum = 0;
-        for(int i = 0; i < n; i++){ sum += packetPairIPG(size, address,port); }
+        for(int i = 0; i < n; i++){ sum += packetPairIPG(size, IP, port); }
         return sum/n;
-    }
-
-    // sends a single int to the server
-    public void sendInt(int n, String address, int port) throws IOException {
-        byte [] num = ByteUtils.intToBytes(n);
-        InetAddress IP = InetAddress.getByName(address);
-        send(num, IP, 9876);
     }
 
     public static void main(String args[]) throws Exception {
         UDPClient client = new UDPClient();
-//        String IP = "169.254.5.28";
-        String IP = "localhost";
+//        String address = "169.254.5.28";
+        String address = "localhost";
+        InetAddress IP = InetAddress.getByName(address);
         long result = client.avgPairIPG(1000, 1024, IP, 9876);
         System.out.println(result);
         client.socket.close();
