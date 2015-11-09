@@ -25,13 +25,15 @@ public class UDPClient extends UDPSendReceive{
         receive2 = receive(size);
         long receive2Time = System.nanoTime();
 
+
         long intraProbeGap = (receive2Time-receive1Time)/1000; // convert to microseconds
+
         return intraProbeGap;
     }
 
     // intra-probe gap between packet pair in microseconds, averaged over n executions
     public long avgPairIPG(int n, int size, InetAddress IP, int port) throws IOException {
-        System.out.println("Average IPG over " + n + " runs:");
+        System.out.println("Intra-probe gap between two " + size + " byte packets, averaged over " + n + " runs:");
 
         sendInt(n, IP, port);  // send a single int, indicating the number of packet pairs the server should expect to receive
         sendInt(size, IP, port); // send a single int, indicating the size of the packets the server should expect to receive
@@ -39,6 +41,7 @@ public class UDPClient extends UDPSendReceive{
         DatagramPacket confirmation = receive(4);  // waits to receive confirmation from the server
 
         long sum = 0;
+
         for(int i = 0; i < n; i++){
             sum += packetPairIPG(size, IP, port);
         }
@@ -59,9 +62,7 @@ public class UDPClient extends UDPSendReceive{
 //        String address = "localhost";
         String address = "10.70.170.166";
         InetAddress IP = InetAddress.getByName(address);
-        long result = client.avgPairIPG(1000, 1024, IP, 9876);
-
+        long result = client.avgPairIPG(500, 1024, IP, 9876);
         client.socket.close();
     }
-
 }
