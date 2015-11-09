@@ -6,7 +6,7 @@ import java.net.*;
 
 public class UDPServer extends UDPSendReceive{
 
-    public void startServer(int port) throws SocketException {
+    public UDPServer(int port) throws SocketException{
         socket = new DatagramSocket(port);
     }
 
@@ -34,7 +34,6 @@ public class UDPServer extends UDPSendReceive{
 
     // intra-probe gap between packet pair in microseconds, averaged over n executions
     public long avgPairIPG() throws IOException{
-        startServer(9876);
         DatagramPacket trialPacket = receive(4);
         DatagramPacket sizePacket = receive(4);
         socket.send(sizePacket);
@@ -51,14 +50,13 @@ public class UDPServer extends UDPSendReceive{
     }
 
     public void receiveContinuous (int size) throws IOException {
-        startServer(9876);
         while(true){
             DatagramPacket receivePacket = receive(size);
         }
     }
 
     public static void main(String args[]) throws Exception {
-        UDPServer server = new UDPServer();
+        UDPServer server = new UDPServer(9876);
         long avgIPG = server.avgPairIPG();
         System.out.println(avgIPG);
     }

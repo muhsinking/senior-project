@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 /**
  * Created by muhsinking on 11/9/15.
@@ -21,6 +22,18 @@ public class UDPSendReceive {
         DatagramPacket packet = new DatagramPacket(data, data.length);
         socket.receive(packet);
         return packet;
+    }
+
+    public DatagramSocket getSocket(){
+        return socket;
+    }
+
+    public int getPort (){
+        return socket.getPort();
+    }
+
+    public void setSocket(int port) throws SocketException {
+        socket = new DatagramSocket(port);
     }
 
 }

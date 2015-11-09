@@ -51,7 +51,9 @@ public class UDPClient extends UDPSendReceive{
 
     public static void main(String args[]) throws Exception {
         UDPClient client = new UDPClient();
-        long result = client.avgPairIPG(1000, 1024, "169.254.5.28", 9876);
+//        String IP = "169.254.5.28";
+        String IP = "localhost";
+        long result = client.avgPairIPG(1000, 1024, IP, 9876);
         System.out.println(result);
         client.socket.close();
     }
