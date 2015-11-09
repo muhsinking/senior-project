@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.*;
 
 public class UDPServer {
-    final static int RECEIVESIZE = 1024;
+    final static int RECEIVE = 1024;
 
     DatagramSocket socket;
 
@@ -20,9 +20,9 @@ public class UDPServer {
         socket.send(packet);
     }
 
-    public DatagramPacket receive() throws IOException {
+    public DatagramPacket receive(int size) throws IOException {
         if(socket != null){
-            byte[] data = new byte[RECEIVESIZE];
+            byte[] data = new byte[size];
             DatagramPacket packet = new DatagramPacket(data, data.length);
             socket.receive(packet);
             return packet;
@@ -30,12 +30,13 @@ public class UDPServer {
         throw new NullPointerException("server not started");
     }
 
-    public long receivePacketPairIPG(){
+    //returns time difference between two packet receipts, the "intra-probe gap"
+    public long packetPairIPG(int size){
         long intraProbeGap = -1;
         try{
-            DatagramPacket receivePacket1 = receive();
+            DatagramPacket receivePacket1 = receive(size);
             long receiveTime1 = System.nanoTime();
-            DatagramPacket receivePacket2 = receive();
+            DatagramPacket receivePacket2 = receive(size);
             long receiveTime2 = System.nanoTime();
             socket.send(receivePacket2);
             socket.send(receivePacket1);
@@ -47,15 +48,17 @@ public class UDPServer {
         return intraProbeGap;
     }
 
-    public long avgIntraProbeGap() throws IOException{
+    // intra-probe gap between packet pair in microseconds, averaged over n executions
+    public long avgPairIPG() throws IOException{
         startServer(9876);
-        DatagramPacket trialPacket = receive();
-        socket.send(trialPacket);
-        int n = ByteUtils.bytesToInt(trialPacket.getData()), fails = 0;
+        DatagramPacket trialPacket = receive(4);
+        DatagramPacket sizePacket = receive(4);
+        socket.send(sizePacket);
+        int n = ByteUtils.bytesToInt(trialPacket.getData()), size = ByteUtils.bytesToInt(sizePacket.getData()), fails = 0;
         long sum = 0;
 
         for(int i = 0; i < n; i++){
-            long time = receivePacketPairIPG();
+            long time = packetPairIPG(size);
             if(time >= 0) sum += time;
             else fails ++;
         }
@@ -63,16 +66,16 @@ public class UDPServer {
         return sum / (n-fails);
     }
 
-    public void receiveContinuous () throws IOException {
+    public void receiveContinuous (int size) throws IOException {
         startServer(9876);
         while(true){
-            DatagramPacket receivePacket = receive();
+            DatagramPacket receivePacket = receive(size);
         }
     }
 
     public static void main(String args[]) throws Exception {
         UDPServer server = new UDPServer();
-        long avgIPG = server.avgIntraProbeGap();
+        long avgIPG = server.avgPairIPG();
         System.out.println(avgIPG);
     }
 }
