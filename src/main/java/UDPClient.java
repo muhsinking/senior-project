@@ -5,26 +5,10 @@
 import java.io.*;
 import java.net.*;
 
-public class UDPClient {
-
-    DatagramSocket socket;
+public class UDPClient extends UDPSendReceive{
 
     public UDPClient() throws SocketException {
         socket = new DatagramSocket();
-    }
-
-    // returns the next packet received
-    public DatagramPacket receive(int size) throws IOException {
-        byte[] data = new byte[size];
-        DatagramPacket packet = new DatagramPacket(data, data.length);
-        socket.receive(packet);
-        return packet;
-    }
-
-    // sends data to a specified address over a specified port
-    public void send(byte[] data, InetAddress IP, int port) throws IOException{
-        DatagramPacket packet = new DatagramPacket(data, data.length, IP, port);
-        socket.send(packet);
     }
 
     //returns time difference between two packet receipts, the "intra-probe gap"
@@ -33,7 +17,7 @@ public class UDPClient {
                 send2 = new byte[size];
         DatagramPacket receive1, receive2;
 	    InetAddress IP = InetAddress.getByName(address);
-	 
+
         send(send1, IP, port);
         send(send2, IP, port);
 

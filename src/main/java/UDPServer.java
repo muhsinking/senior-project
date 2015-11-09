@@ -4,9 +4,7 @@
 import java.io.*;
 import java.net.*;
 
-public class UDPServer {
-
-    DatagramSocket socket;
+public class UDPServer extends UDPSendReceive{
 
     public void startServer(int port) throws SocketException {
         socket = new DatagramSocket(port);
@@ -14,29 +12,16 @@ public class UDPServer {
 
     public void closeServer(){if(socket != null) socket = null;}
 
-    public void send(byte[] data, InetAddress IP, int port) throws IOException{
-        DatagramPacket packet = new DatagramPacket(data, data.length, IP, port);
-        socket.send(packet);
-    }
-
-    public DatagramPacket receive(int size) throws IOException {
-        if(socket != null){
-            byte[] data = new byte[size];
-            DatagramPacket packet = new DatagramPacket(data, data.length);
-            socket.receive(packet);
-            return packet;
-        }
-        throw new NullPointerException("server not started");
-    }
-
     //returns time difference between two packet receipts, the "intra-probe gap"
     public long packetPairIPG(int size){
         long intraProbeGap = -1;
         try{
+
             DatagramPacket receivePacket1 = receive(size);
             long receiveTime1 = System.nanoTime();
             DatagramPacket receivePacket2 = receive(size);
             long receiveTime2 = System.nanoTime();
+
             socket.send(receivePacket2);
             socket.send(receivePacket1);
             intraProbeGap = (receiveTime2 - receiveTime1) / 1000; // convert to microseconds
