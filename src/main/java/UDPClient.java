@@ -52,6 +52,7 @@ public class UDPClient {
         return sum/n;
     }
 
+    // sends a single int to the server, indicating the number of trials to expect
     public void sendNumTrials(int n, String address, int port) throws IOException {
         byte [] trials = ByteUtils.intToBytes(n);
         InetAddress IP = InetAddress.getByName(address);

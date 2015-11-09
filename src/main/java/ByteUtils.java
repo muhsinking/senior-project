@@ -13,6 +13,10 @@ public class ByteUtils {
         return ByteBuffer.allocate(4).putInt(n).array();
     }
 
+    public static int bytesToInt(byte[] bytes){
+        return java.nio.ByteBuffer.wrap(bytes).getInt();
+    }
+
     public static byte[] longToBytes(long n) {
         buffer.putLong(0, n);
         return buffer.array();

@@ -48,8 +48,19 @@ public class UDPServer {
         return intraProbeGap;
     }
 
-    public void avgIntraProbeGap(int n){
+    public long avgIntraProbeGap() throws IOException{
+        startServer(9876);
+        DatagramPacket trialPacket = receive();
+        socket.send(trialPacket);
+        int n = ByteUtils.bytesToInt(trialPacket.getData()), fails = 0;
+        long sum = 0;
+        for(int i = 0; i < n; i++){
+            long time = recievePacketPairIPG();
+            if(time >= 0) sum += time;
+            else fails ++;
+        }
 
+        return sum / (n-fails);
     }
 
     public void run() throws Exception {
@@ -61,7 +72,7 @@ public class UDPServer {
                 try{
                     DatagramPacket receivePacket = receive();
 //                    System.out.println("Received " + receivePacket.getData().length + " bytes.");
-                    socket.send(receivePacket);
+
                 }
                catch (IOException err){
                    System.out.println("Error establishing connection "+err.getMessage());
