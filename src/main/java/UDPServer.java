@@ -5,8 +5,7 @@ import java.io.*;
 import java.net.*;
 
 public class UDPServer {
-    final static int RECIEVESIZE = 1024;
-    final static int SENDSIZE = 1024;
+    final static int RECEIVESIZE = 1024;
 
     DatagramSocket socket;
 
@@ -23,7 +22,7 @@ public class UDPServer {
 
     public DatagramPacket receive() throws IOException {
         if(socket != null){
-            byte[] data = new byte[RECIEVESIZE];
+            byte[] data = new byte[RECEIVESIZE];
             DatagramPacket packet = new DatagramPacket(data, data.length);
             socket.receive(packet);
             return packet;
@@ -31,7 +30,7 @@ public class UDPServer {
         throw new NullPointerException("server not started");
     }
 
-    public long recievePacketPairIPG(){
+    public long receivePacketPairIPG(){
         long intraProbeGap = -1;
         try{
             DatagramPacket receivePacket1 = receive();
@@ -40,7 +39,7 @@ public class UDPServer {
             long receiveTime2 = System.nanoTime();
             socket.send(receivePacket2);
             socket.send(receivePacket1);
-            intraProbeGap = (receiveTime2 - receiveTime1) / 1000;
+            intraProbeGap = (receiveTime2 - receiveTime1) / 1000; // convert to microseconds
         }
         catch (IOException err){
             System.out.println("Error establishing connection "+err.getMessage());
@@ -54,8 +53,9 @@ public class UDPServer {
         socket.send(trialPacket);
         int n = ByteUtils.bytesToInt(trialPacket.getData()), fails = 0;
         long sum = 0;
+
         for(int i = 0; i < n; i++){
-            long time = recievePacketPairIPG();
+            long time = receivePacketPairIPG();
             if(time >= 0) sum += time;
             else fails ++;
         }
@@ -63,29 +63,16 @@ public class UDPServer {
         return sum / (n-fails);
     }
 
-    public void run() throws Exception {
-        try{
-            startServer(9876);
-
-            while(true){
-
-                try{
-                    DatagramPacket receivePacket = receive();
-//                    System.out.println("Received " + receivePacket.getData().length + " bytes.");
-
-                }
-               catch (IOException err){
-                   System.out.println("Error establishing connection "+err.getMessage());
-               }
-            }
-        }
-        catch (SocketException err){
-            System.out.println("Couldn't connect to port "+err.getMessage());
+    public void receiveContinuous () throws IOException {
+        startServer(9876);
+        while(true){
+            DatagramPacket receivePacket = receive();
         }
     }
 
     public static void main(String args[]) throws Exception {
         UDPServer server = new UDPServer();
-        server.run();
+        long avgIPG = server.avgIntraProbeGap();
+        System.out.println(avgIPG);
     }
 }

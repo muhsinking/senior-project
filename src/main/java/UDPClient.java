@@ -47,6 +47,7 @@ public class UDPClient {
     // intra probe gap in microseconds, averaged over n executions
     public long avgIntraProbeGap(int n, String address, int port) throws IOException {
         sendNumTrials(n, address, port);
+        DatagramPacket confirmation = receive();
         long sum = 0;
         for(int i = 0; i < n; i++){ sum += sendPacketPairIPG(address,port); }
         return sum/n;
