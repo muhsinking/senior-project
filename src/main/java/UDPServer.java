@@ -12,7 +12,7 @@ public class UDPServer extends UDPSendReceive{
 
     public void closeServer(){if(socket != null) socket = null;}
 
-    //returns time difference between two packet receipts, the "intra-probe gap"
+    //returns time difference between two packet receipts, the "intra-probe gap", in nanoseconds
     public long packetPairIPG(int sizeH, int sizeT){
         long intraProbeGap = -1;
         try{
@@ -23,7 +23,7 @@ public class UDPServer extends UDPSendReceive{
 
             socket.send(head);
             socket.send(tail);
-            intraProbeGap = (tailRxTime - headRxTime) / 1000; // convert to microseconds
+            intraProbeGap = (tailRxTime - headRxTime);
         }
         catch (IOException err){
             System.out.println("Error establishing connection "+err.getMessage());
