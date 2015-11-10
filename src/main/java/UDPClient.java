@@ -57,11 +57,11 @@ public class UDPClient extends UDPSendReceive{
 
     public static void main(String args[]) throws Exception {
         UDPClient client = new UDPClient();
-//        String address = "169.254.5.28";
-        String address = "localhost";
+        String address = "169.254.5.28";
+//        String address = "localhost";
 //        String address = "10.70.170.166";
         InetAddress IP = InetAddress.getByName(address);
-        long result = client.avgPairIPG(500, 1024, 1024, IP, 9876);
+        long result = client.avgPairIPG(2000, 1000, 1000, IP, 9876);
         client.socket.close();
     }
 }
