@@ -25,7 +25,7 @@ public class UDPClient extends UDPSendReceive{
         tailRx = receive(sizeT);
         long tailRxTime = System.nanoTime();
 
-        long intraProbeGap = (headRxTime-tailRxTime)/1000; // convert to microseconds
+        long intraProbeGap = (tailRxTime-headRxTime)/1000; // convert to microseconds
         return intraProbeGap;
     }
 
@@ -50,8 +50,8 @@ public class UDPClient extends UDPSendReceive{
 
         DatagramPacket serverResponse = receive(4);
         int serverIPG = ByteUtils.bytesToInt(serverResponse.getData());
-        System.out.println("Server - " + serverIPG);
-        System.out.println("Client - " + clientIPG);
+        System.out.println("Server - " + serverIPG + " ms");
+        System.out.println("Client - " + clientIPG + " ms");
         return clientIPG;
     }
 

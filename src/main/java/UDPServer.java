@@ -23,7 +23,7 @@ public class UDPServer extends UDPSendReceive{
 
             socket.send(head);
             socket.send(tail);
-            intraProbeGap = (headRxTime - tailRxTime) / 1000; // convert to microseconds
+            intraProbeGap = (tailRxTime - headRxTime) / 1000; // convert to microseconds
         }
         catch (IOException err){
             System.out.println("Error establishing connection "+err.getMessage());
