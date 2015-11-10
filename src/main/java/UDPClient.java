@@ -12,38 +12,38 @@ public class UDPClient extends UDPSendReceive{
     }
 
     //returns time difference between two packet receipts, the "intra-probe gap"
-    public long packetPairIPG(int size, InetAddress IP, int port) throws IOException {
-        byte[]  send1 = new byte[size],
-                send2 = new byte[size];
+    public long packetPairIPG(int sizeH, int sizeT, InetAddress IP, int port) throws IOException {
+        byte[]  send1 = new byte[sizeH],
+                send2 = new byte[sizeT];
         DatagramPacket receive1, receive2;
 
         send(send1, IP, port);
         send(send2, IP, port);
 
-        receive1 = receive(size);
+        receive1 = receive(sizeH);
         long receive1Time = System.nanoTime();
-        receive2 = receive(size);
+        receive2 = receive(sizeT);
         long receive2Time = System.nanoTime();
-
 
         long intraProbeGap = (receive2Time-receive1Time)/1000; // convert to microseconds
 
         return intraProbeGap;
     }
 
-    // intra-probe gap between packet pair in microseconds, averaged over n executions
-    public long avgPairIPG(int n, int size, InetAddress IP, int port) throws IOException {
-        System.out.println("Intra-probe gap between two " + size + " byte packets, averaged over " + n + " runs:");
+    // intra-probe gap between a packet pair in microseconds, averaged over n executions
+    public long avgPairIPG(int n, int sizeH, int sizeT, InetAddress IP, int port) throws IOException {
+        System.out.println("Intra-probe gap between head packet of " + sizeH + " bytes and tail packet of " + sizeT + " bytes, averaged over " + n + " runs:");
 
         sendInt(n, IP, port);  // send a single int, indicating the number of packet pairs the server should expect to receive
-        sendInt(size, IP, port); // send a single int, indicating the size of the packets the server should expect to receive
+        sendInt(sizeH, IP, port); // send a single int, indicating the size of the packets the server should expect to receive
+        sendInt(sizeT, IP, port); // send a single int, indicating the size of the packets the server should expect to receive
 
         DatagramPacket confirmation = receive(4);  // waits to receive confirmation from the server
 
         long sum = 0;
 
         for(int i = 0; i < n; i++){
-            sum += packetPairIPG(size, IP, port);
+            sum += packetPairIPG(sizeH, sizeT, IP, port);
         }
 
         long clientIPG = sum/n;
@@ -62,7 +62,7 @@ public class UDPClient extends UDPSendReceive{
 //        String address = "localhost";
         String address = "10.70.170.166";
         InetAddress IP = InetAddress.getByName(address);
-        long result = client.avgPairIPG(500, 1024, IP, 9876);
+        long result = client.avgPairIPG(500, 1024, 1024, IP, 9876);
         client.socket.close();
     }
 }
