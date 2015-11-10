@@ -21,8 +21,8 @@ public class UDPServer extends UDPSendReceive{
             DatagramPacket receivePacket2 = receive(sizeT);
             long receiveTime2 = System.nanoTime();
 
-            socket.send(receivePacket2);
             socket.send(receivePacket1);
+            socket.send(receivePacket2);
             intraProbeGap = (receiveTime2 - receiveTime1) / 1000; // convert to microseconds
         }
         catch (IOException err){
