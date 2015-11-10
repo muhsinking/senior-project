@@ -13,19 +13,19 @@ public class UDPClient extends UDPSendReceive{
 
     //returns time difference between two packet receipts, the "intra-probe gap"
     public long packetPairIPG(int sizeH, int sizeT, InetAddress IP, int port) throws IOException {
-        byte[]  send1 = new byte[sizeH],
-                send2 = new byte[sizeT];
-        DatagramPacket receive1, receive2;
+        byte[]  headTx = new byte[sizeH],
+                tailTx = new byte[sizeT];
+        DatagramPacket headRx, tailRx;
 
-        send(send1, IP, port);
-        send(send2, IP, port);
+        send(headTx, IP, port);
+        send(tailTx, IP, port);
 
-        receive1 = receive(sizeH);
-        long receive1Time = System.nanoTime();
-        receive2 = receive(sizeT);
-        long receive2Time = System.nanoTime();
+        headRx = receive(sizeH);
+        long headRxTime = System.nanoTime();
+        tailRx = receive(sizeT);
+        long tailRxTime = System.nanoTime();
 
-        long intraProbeGap = (receive2Time-receive1Time)/1000; // convert to microseconds
+        long intraProbeGap = (headRxTime-tailRxTime)/1000; // convert to microseconds
         return intraProbeGap;
     }
 
@@ -58,8 +58,8 @@ public class UDPClient extends UDPSendReceive{
     public static void main(String args[]) throws Exception {
         UDPClient client = new UDPClient();
 //        String address = "169.254.5.28";
-//        String address = "localhost";
-        String address = "10.70.170.166";
+        String address = "localhost";
+//        String address = "10.70.170.166";
         InetAddress IP = InetAddress.getByName(address);
         long result = client.avgPairIPG(500, 1024, 1024, IP, 9876);
         client.socket.close();

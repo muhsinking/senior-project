@@ -16,14 +16,14 @@ public class UDPServer extends UDPSendReceive{
     public long packetPairIPG(int sizeH, int sizeT){
         long intraProbeGap = -1;
         try{
-            DatagramPacket receivePacket1 = receive(sizeH);
-            long receiveTime1 = System.nanoTime();
-            DatagramPacket receivePacket2 = receive(sizeT);
-            long receiveTime2 = System.nanoTime();
+            DatagramPacket head = receive(sizeH);
+            long headRxTime = System.nanoTime();
+            DatagramPacket tail = receive(sizeT);
+            long tailRxTime = System.nanoTime();
 
-            socket.send(receivePacket1);
-            socket.send(receivePacket2);
-            intraProbeGap = (receiveTime2 - receiveTime1) / 1000; // convert to microseconds
+            socket.send(head);
+            socket.send(tail);
+            intraProbeGap = (headRxTime - tailRxTime) / 1000; // convert to microseconds
         }
         catch (IOException err){
             System.out.println("Error establishing connection "+err.getMessage());
