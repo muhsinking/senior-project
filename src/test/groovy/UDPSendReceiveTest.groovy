@@ -18,9 +18,10 @@ class UDPSendReceiveTest extends GroovyTestCase {
         assert(packet.getData() == data)
     }
 
-//    void testSendInt() {
-//
-//    }
+    void testSendInt() {
+        sr.setSocket(1111)
+        sr.sendInt(3, InetAddress.getLocalHost(), 1000)
+    }
 //
 //    void testGetSocket() {
 //

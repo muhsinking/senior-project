@@ -28,5 +28,7 @@ public class UDPSendReceive {
     }
 
     public DatagramSocket getSocket(){return socket;}
-    public void setSocket(int port) throws SocketException {socket = new DatagramSocket(port);}
+    public void setSocket(int port) throws SocketException {
+        socket = new DatagramSocket(port);
+    }
 }
