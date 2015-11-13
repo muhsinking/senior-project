@@ -13,7 +13,7 @@ public class UDPSendReceive {
         socket.send(packet);
     }
 
-    // sends a single int
+    // sends a single int to a specified address over a specified port
     public void sendInt(int n, InetAddress IP, int port) throws IOException {
         byte [] num = ByteUtils.intToBytes(n);
         send(num, IP, port);
@@ -28,6 +28,7 @@ public class UDPSendReceive {
     }
 
     public DatagramSocket getSocket(){return socket;}
+
     public void setSocket(int port) throws SocketException {
         socket = new DatagramSocket(port);
     }

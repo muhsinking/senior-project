@@ -52,10 +52,10 @@ public class UDPServer extends UDPSendReceive{
         return sum / n;
     }
 
+    // continually accept requests from the client for IPG averages
     public void continuousIPG() throws IOException {
         while(true){
             long avgIPG = avgPairIPG();
-
             System.out.println(avgIPG);
         }
     }
