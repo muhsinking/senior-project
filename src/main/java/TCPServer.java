@@ -4,8 +4,7 @@
 import java.io.*;
 import java.net.*;
 
-public class TCPServer
-{
+public class TCPServer {
 
     ServerSocket socket;
 
@@ -13,8 +12,7 @@ public class TCPServer
         socket = new ServerSocket(sock);
     }
 
-    public static void main(String argv[]) throws Exception
-    {
+    public static void main(String argv[]) throws Exception {
         TCPServer server = new TCPServer(6789);
 
         while(true){
@@ -35,8 +33,4 @@ public class TCPServer
         return in.readInt();
     }
 
-//    public int receive() throws IOException {
-//        DataInputStream inFromServer = new DataInputStream(socket.getInputStream()));
-//        return inFromServer.readInt();
-//    }
 }

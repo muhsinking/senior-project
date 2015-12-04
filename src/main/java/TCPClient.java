@@ -4,8 +4,7 @@
 import java.io.*;
 import java.net.*;
 
-public class TCPClient
-{
+public class TCPClient {
     Socket socket;
 
     TCPClient(String address, int sock) throws IOException {
