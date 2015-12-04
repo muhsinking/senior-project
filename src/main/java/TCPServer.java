@@ -20,34 +20,19 @@ public class TCPServer
         while(true){
             Socket connection = server.socket.accept();
             int rx = server.receive(connection);
-            server.send(connection,rx+1);
+            System.out.println("received: " + rx);
+            server.send(connection,rx+3);
         }
-
-//        String clientSentence;
-//        String capitalizedSentence;
-//        ServerSocket welcomeSocket = new ServerSocket(6789);
-//
-//        while(true)
-//        {
-//            Socket connectionSocket = welcomeSocket.accept();
-//            BufferedReader inFromClient =
-//                    new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-//            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-//            clientSentence = inFromClient.readLine();
-//            System.out.println("Received: " + clientSentence);
-//            capitalizedSentence = clientSentence.toUpperCase() + '\n';
-//            outToClient.writeBytes(capitalizedSentence);
-//        }
     }
 
     public void send(Socket connection, int n)throws IOException {
-        DataOutputStream outToClient = new DataOutputStream(connection.getOutputStream());
-        outToClient.writeInt(n);
+        DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+        out.writeInt(n);
     }
 
     public int receive(Socket connection) throws IOException {
-        DataInputStream inFromClient = new DataInputStream(connection.getInputStream());
-        return inFromClient.read();
+        DataInputStream in = new DataInputStream(connection.getInputStream());
+        return in.readInt();
     }
 
 //    public int receive() throws IOException {
