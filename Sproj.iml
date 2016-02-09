@@ -24,5 +24,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" exported="" name="groovy-2.4.5" level="application" />
+    <orderEntry type="library" name="api" level="application" />
   </component>
 </module>

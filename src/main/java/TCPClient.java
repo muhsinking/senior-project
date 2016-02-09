@@ -7,6 +7,12 @@ import java.net.*;
 public class TCPClient {
     Socket socket;
 
+    /*
+
+    what I need: send experimental controls.
+
+     */
+
     TCPClient(String address, int sock) throws IOException {
         this.socket = new Socket(address, sock);
     }
