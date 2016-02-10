@@ -9,7 +9,11 @@ public class TCPClient {
 
     /*
 
-    what I need: send experimental controls.
+    send parameters to server
+        train length
+        # of trains
+        size of Ph
+        size of Pt
 
      */
 
@@ -22,8 +26,8 @@ public class TCPClient {
         client.send(client.socket, 22);
         int rx = client.receive(client.socket);
         System.out.println(rx);
-
     }
+
 
     public void send(Socket connection, int n)throws IOException {
         DataOutputStream out = new DataOutputStream(connection.getOutputStream());

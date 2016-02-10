@@ -59,9 +59,4 @@ public class UDPServer extends UDPSendReceive{
             System.out.println(avgIPG);
         }
     }
-
-    public static void main(String args[]) throws Exception {
-        UDPServer server = new UDPServer(9876);
-        server.continuousIPG();
-    }
 }

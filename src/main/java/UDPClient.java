@@ -76,9 +76,6 @@ public class UDPClient extends UDPSendReceive{
         System.out.println("Client - " + clientIPG + " " + resolution + "seconds");
         return clientIPG;
     }
-
-    public static void main(String args[]) throws Exception {
-    }
 }
 
 
