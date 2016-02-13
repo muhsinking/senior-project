@@ -1,5 +1,7 @@
+import javax.sound.midi.SysexMessage;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -25,8 +27,6 @@ public class Client {
     private static UDPClient client;
     private static TCPClient control;
 
-
-
     // arguments: String IP, int trainLength, int numTrains, int sH, int sT, int IPG, String resolution
     public static void main(String[] args) throws IOException {
         String address = args[0];
@@ -37,6 +37,7 @@ public class Client {
         int IPG = Integer.parseInt(args[5]);
         String resolution = args[6];
         InetAddress IP = InetAddress.getByName(address);
+        int div = getResolutionDivider(resolution);
         client = new UDPClient();
         control = new TCPClient(address,6789);
 
@@ -46,9 +47,15 @@ public class Client {
         control.send(control.socket, sT);
         control.send(control.socket, trainLength);
 
-        for(int i = 0; i < numTrains; i++){
-            for(int j = 0; j < trainLength; j++){
-                client.packetPairIPG(sH,sT,IP,9876);
+        int[] results = new int[numTrains];
+
+        if(control.receive(control.socket) == 1) {
+            for (int i = 0; i < numTrains; i++) {
+                for (int j = 0; j < trainLength; j++) {
+                    client.packetPairIPG(sH, sT, IP, 9876);
+                }
+                results[i] = control.receive(control.socket)/div;
+                System.out.println(results[i]/div);
             }
         }
 
