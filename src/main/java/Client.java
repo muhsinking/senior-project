@@ -38,6 +38,13 @@ public class Client {
         String resolution = args[6];
         InetAddress IP = InetAddress.getByName(address);
         int div = getResolutionDivider(resolution);
+
+        if(div < 0){
+            System.out.println("Invalid resolution given, defaulting to milliseconds");
+            div = 1;
+            resolution = "milli";
+        }
+
         client = new UDPClient();
         control = new TCPClient(address,6789);
 
@@ -55,7 +62,7 @@ public class Client {
                     client.packetPairIPG(sH, sT, IP, 9876);
                 }
                 results[i] = control.receive(control.socket)/div;
-                System.out.println(results[i]/div);
+                System.out.println(results[i]/div + " " + resolution + "seconds");
             }
         }
 
