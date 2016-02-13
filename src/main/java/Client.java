@@ -28,7 +28,7 @@ public class Client {
     private static TCPClient control;
 
     // arguments: String IP, int trainLength, int numTrains, int sH, int sT, int IPG, String resolution
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         String address = args[0];
         int trainLength = Integer.parseInt(args[1]);
         int numTrains = Integer.parseInt(args[2]);
@@ -56,10 +56,18 @@ public class Client {
 
         int[] results = new int[numTrains];
 
+        // find the roundtrip time gap to space future runs
+        long start = System.nanoTime();
+        client.packetPairIPG(sH, sT, IP, 9876);
+        long end = System.nanoTime();
+
+        IPG = (int) (end-start)/1000000;
+
         if(control.receive(control.socket) == 1) {
             for (int i = 0; i < numTrains; i++) {
                 for (int j = 0; j < trainLength; j++) {
                     client.packetPairIPG(sH, sT, IP, 9876);
+                    Thread.sleep(IPG);
                 }
                 results[i] = control.receive(control.socket)/div;
                 System.out.println(results[i]/div + " " + resolution + "seconds");

@@ -32,6 +32,8 @@ public class Server {
             int sT = control.receive(connection);
             control.send(connection,1);
 
+            long roundTripTest = server.packetPairIPG(sH,sT);
+
             for(int i = 0; i < numTrains; i++){
                 int sum = 0;
                 for(int j = 0; j < trainLength; j++){
