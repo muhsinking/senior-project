@@ -21,13 +21,6 @@ public class TCPClient {
         this.socket = new Socket(address, sock);
     }
 
-    public static void main(String argv[]) throws Exception {
-        TCPClient client = new TCPClient("localhost",6789);
-        client.send(client.socket, 22);
-        int rx = client.receive(client.socket);
-        System.out.println(rx);
-    }
-
 
     public void send(Socket connection, int n)throws IOException {
         DataOutputStream out = new DataOutputStream(connection.getOutputStream());
