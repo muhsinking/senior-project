@@ -21,6 +21,12 @@ import java.net.UnknownHostException;
 */
 
 public class Client {
+
+    private static UDPClient client;
+    private static TCPClient control;
+
+
+
     // arguments: String IP, int trainLength, int numTrains, int sH, int sT, int IPG, String resolution
     public static void main(String[] args) throws IOException {
         String address = args[0];
@@ -30,10 +36,9 @@ public class Client {
         int sT = Integer.parseInt(args[4]);
         int IPG = Integer.parseInt(args[5]);
         String resolution = args[6];
-        UDPClient client = new UDPClient();
         InetAddress IP = InetAddress.getByName(address);
-
-        TCPClient control = new TCPClient(address,6789);
+        client = new UDPClient();
+        control = new TCPClient(address,6789);
 
         control.send(control.socket, trainLength);
         control.send(control.socket, numTrains);
@@ -52,7 +57,7 @@ public class Client {
 
     // given a resolution string, return the relevant divisor to get this unit from nanoseconds
     // returns -1 if invalid string
-    public int getResolutionDivider(String resolution){
+    public static int getResolutionDivider(String resolution){
         int div = -1;
         switch (resolution){
             case "":div = 1000000000;
