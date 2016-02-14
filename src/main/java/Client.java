@@ -70,7 +70,7 @@ public class Client {
                     Thread.sleep(IPG);
                 }
                 results[i] = control.receive(control.socket)/div;
-                System.out.println(results[i]/div + " " + resolution + "seconds");
+                System.out.println(results[i] + " " + resolution + "seconds");
             }
         }
 
