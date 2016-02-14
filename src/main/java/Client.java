@@ -40,9 +40,9 @@ public class Client {
         int div = getResolutionDivider(resolution);
 
         if(div < 0){
-            System.out.println("Invalid resolution given, defaulting to milliseconds");
-            div = 1;
-            resolution = "milli";
+            System.out.println("Invalid resolution given, defaulting to microseconds");
+            div = 1000;
+            resolution = "micro";
         }
 
         client = new UDPClient();
