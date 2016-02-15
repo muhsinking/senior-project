@@ -36,10 +36,17 @@ public class Server {
 
             for(int i = 0; i < numTrains; i++){
                 int sum = 0;
+                int numValid = 0;
+
                 for(int j = 0; j < trainLength; j++){
-                    sum += server.packetPairIPG(sH,sT);
+                    long IPG = server.packetPairIPG(sH,sT);
+                    if(valid(IPG,sH,sT)){
+                        sum += IPG;
+                        numValid ++;
+                    }
                 }
-                sum /= trainLength;
+
+                sum /= numValid;
                 System.out.println(sum);
                 control.send(connection,sum);
             }
@@ -47,6 +54,10 @@ public class Server {
 
 
         }
+    }
+
+    public static boolean valid(long IPG, int sH, int sT){
+        return true;
     }
 
 /*
