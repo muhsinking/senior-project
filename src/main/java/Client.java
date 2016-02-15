@@ -62,7 +62,9 @@ public class Client {
         client.packetPairIPG(sH, sT, IP, 9876);
         long end = System.nanoTime();
 
-        IPG = (int) (end-start)/1000000;
+        IPG = (int) ((end-start)/1000000) * 2;
+        if(IPG < 1) IPG = 1;
+        System.out.println("Inter-probe gap: " + IPG + " milliseconds.");
 
         if(control.receive(control.socket) == 1) {
             for (int i = 0; i < numTrains; i++) {
