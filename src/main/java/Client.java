@@ -1,5 +1,6 @@
 import javax.sound.midi.SysexMessage;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -75,6 +76,13 @@ public class Client {
         }
 
         client.socket.close();
+
+        PrintWriter writer = new PrintWriter("AvgIPG.txt", "UTF-8");
+        for(int i = 0; i < results.length; i++){
+            writer.println(results[i]);
+        }
+        writer.close();
+
     }
 
     // given a resolution string, return the relevant divisor to get this unit from nanoseconds
