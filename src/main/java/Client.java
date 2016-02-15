@@ -20,7 +20,6 @@ import java.net.UnknownHostException;
         interprobe gap (between two packet pairs)
             roundtrip time/2
         resolution
-
 */
 
 public class Client {

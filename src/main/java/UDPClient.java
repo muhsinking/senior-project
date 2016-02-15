@@ -29,5 +29,3 @@ public class UDPClient extends UDPSendReceive{
         return intraProbeGap;
     }
 }
-
-
