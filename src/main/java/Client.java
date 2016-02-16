@@ -66,6 +66,8 @@ public class Client {
                     client.packetPairIPG(sH, sT, IP, 9876);
                     Thread.sleep(IPG);
                 }
+                sH -= 100;
+                sT -= 100;
                 results[i] = control.receive(control.socket)/div;
                 System.out.println(results[i] + " " + resolution + "seconds");
             }
