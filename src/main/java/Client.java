@@ -66,10 +66,12 @@ public class Client {
                     client.packetPairIPG(sH, sT, IP, 9876);
                     Thread.sleep(IPG);
                 }
+                results[i] = control.receive(control.socket)/div;
+                System.out.println("Packet size: " + sH + "bytes. Intra-probe gap: " + results[i] + " " + resolution + "seconds");
+
+                // reduce packet size by 100 bytes for each successive train
                 sH -= 100;
                 sT -= 100;
-                results[i] = control.receive(control.socket)/div;
-                System.out.println(results[i] + " " + resolution + "seconds");
             }
         }
 
