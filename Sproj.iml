@@ -25,5 +25,7 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="groovy-2.4.5" level="application" />
     <orderEntry type="library" name="api" level="application" />
+    <orderEntry type="library" name="jung-2.0.1" level="application" />
+    <orderEntry type="library" name="jung2-2_0_1" level="project" />
   </component>
 </module>

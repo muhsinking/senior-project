@@ -1,10 +1,6 @@
-import javax.sound.midi.SysexMessage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 /**
  * Created by muhsinking on 2/9/16.
@@ -17,9 +13,6 @@ import java.net.UnknownHostException;
         size of Ph	(64 bytes default)
         size of Pt 	(1500 bytes default)
         resolution
-
-        interprobe gap (between two packet pairs) ???
-            roundtrip time/2
 */
 
 public class Client {
@@ -87,6 +80,8 @@ public class Client {
         }
         writer.close();
 
+
+        
     }
 
     // given a resolution string, return the relevant divisor to get this unit from nanoseconds

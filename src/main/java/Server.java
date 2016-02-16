@@ -23,7 +23,7 @@ public class Server {
         TCPServer control = new TCPServer(6789);
         UDPServer server = new UDPServer(9876);
 
-
+        // main server loop, continually accepts new packet trains
         while(true){
             Socket connection = control.socket.accept();
             int trainLength = control.receive(connection);
