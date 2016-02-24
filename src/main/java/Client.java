@@ -25,8 +25,8 @@ public class Client {
         String address = args[0];
         int trainLength = Integer.parseInt(args[1]);
         int numTrains = Integer.parseInt(args[2]);
-        int sH = Integer.parseInt(args[3]);
-        int sT = Integer.parseInt(args[4]);
+        int sH = Integer.parseInt(args[3])-46; // 46 bytes of header data
+        int sT = Integer.parseInt(args[4])-46; // 46 bytes of header data
         String resolution = args[5];
         InetAddress IP = InetAddress.getByName(address);
         int div = getResolutionDivider(resolution);
