@@ -22,11 +22,12 @@ public class Client {
 
     // arguments: String IP, int trainLength, int numTrains, int sH, int sT, String resolution
     public static void main(String[] args) throws IOException, InterruptedException {
+        int header = 32;
         String address = args[0];
         int trainLength = Integer.parseInt(args[1]);
         int numTrains = Integer.parseInt(args[2]);
-        int sH = Integer.parseInt(args[3])-46; // 46 bytes of header data
-        int sT = Integer.parseInt(args[4])-46; // 46 bytes of header data
+        int sH = Integer.parseInt(args[3])-header; // 46 bytes of header data
+        int sT = Integer.parseInt(args[4])-header; // 46 bytes of header data
         String resolution = args[5];
         InetAddress IP = InetAddress.getByName(address);
         int div = getResolutionDivider(resolution);
@@ -67,7 +68,7 @@ public class Client {
                     Thread.sleep(IPG);
                 }
                 results[i] = control.receive(control.socket)/div;
-                System.out.println("Head " + (sH+46) + " bytes\tTail " + (sT+46) + " bytes\tIntra-probe gap " + results[i] + " " + resolution + "seconds");
+                System.out.println("Head " + (sH+header) + " bytes\tTail " + (sT+header) + " bytes\tIntra-probe gap " + results[i] + " " + resolution + "seconds");
 
                 // reduce packet size by 100 bytes for each successive train
                 sH -= 100;
