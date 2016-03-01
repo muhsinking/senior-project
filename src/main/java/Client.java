@@ -56,16 +56,20 @@ public class Client {
         client.packetPairIPG(sH, sT, IP, 9876);
         long end = System.nanoTime();
 
-        int IPG = (int) ((end-start)) * 2 * 1000;
-        if(IPG < 1) IPG = 1000;
-        System.out.println("Inter-probe gap: " + IPG + " microseconds.");
+        int IPGns = (int) (end-start);
+	int IPGms = IPGns / 1000000;
+	IPGns = IPGns % 1000000;
+
+	System.out.println("IPGms " + IPGms + " IPGns " + IPGns);
+
+	System.out.println("Inter-probe gap: " + ((IPGms*1000)+(IPGns/1000)) + " microseconds.");
 
         // primary experimental loop
         if(control.receive(control.socket) == 1) {
             for (int i = 0; i < numTrains; i++) {
                 for (int j = 0; j < trainLength; j++) {
                     client.packetPairIPG(sH, sT, IP, 9876);
-                    Thread.sleep(0,IPG);
+                    Thread.sleep(IPGms,IPGns);
                 }
                 results[i] = control.receive(control.socket)/div;
                 System.out.println("Head " + (sH+header) + " bytes\tTail " + (sT+header) + " bytes\tIntra-probe gap " + results[i] + " " + resolution + "seconds");
