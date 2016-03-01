@@ -22,7 +22,7 @@ public class Client {
 
     // arguments: String IP, int trainLength, int numTrains, int sH, int sT, String resolution
     public static void main(String[] args) throws IOException, InterruptedException {
-        int header = 32;
+        int header = 42;
         String address = args[0];
         int trainLength = Integer.parseInt(args[1]);
         int numTrains = Integer.parseInt(args[2]);
