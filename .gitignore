@@ -1,6 +1,7 @@
 out/
 .idea/
 
+*.class
 #*.iml
 *.gdoc
 *.gslides
