@@ -9,3 +9,7 @@ out/
 AvgIPG.txt
 
 AvgIPG.numbers
+
+*.numbers
+
+*.pages
