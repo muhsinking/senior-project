@@ -19,6 +19,7 @@ public class DebugServer {
         // main server loop, continually accepts new packet pairs
         while(true){
             long IPG = server.packetPairIPG(sH,sT);
+	    System.out.println(IPG);
         }
     }
 
