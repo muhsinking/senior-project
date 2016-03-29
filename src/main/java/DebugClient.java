@@ -21,8 +21,8 @@ public class DebugClient {
         String address = args[0];
         int trainLength = Integer.parseInt(args[1]);
         int numTrains = Integer.parseInt(args[2]);
-        int sH = 1000-header; // 46 bytes of header data
-        int sT = 1000-header; // 46 bytes of header data
+        int sH = Integer.parseInt(args[3])-header; // 46 bytes of header data
+        int sT = Integer.parseInt(args[4])-header; // 46 bytes of header data
         String resolution = "micro";
         InetAddress IP = InetAddress.getByName(address);
         int div = getResolutionDivider(resolution);
@@ -45,16 +45,12 @@ public class DebugClient {
                 Thread.sleep(2,0);
             }
             System.out.println("Head " + (sH+header) + " bytes\tTail " + (sT+header) + " bytes\tIntra-probe gap " + results[i] + " " + resolution + "seconds");
-
-            // reduce packet size by 100 bytes for each successive train
-            sH -= 100;
-            sT -= 100;
         }
 
         client.socket.close();
 
         // write to file
-        PrintWriter writer = new PrintWriter("AvgIPG.txt", "UTF-8");
+        PrintWriter writer = new PrintWriter("IPG.txt", "UTF-8");
         for(int i = 0; i < results.length; i++){
             writer.println(results[i]);
         }

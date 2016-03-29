@@ -14,13 +14,16 @@ import java.net.SocketException;
 public class DebugServer {
     public static void main(String[] args) throws IOException {
         UDPServer server = new UDPServer(9876);
-        int sH = 1000, sT = 1000;
+        int header = 42;
+        int sH = Integer.parseInt(args[0])-header; // 46 bytes of header data
+        int sT = Integer.parseInt(args[1])-header; // 46 bytes of header data
 
         // main server loop, continually accepts new packet pairs
         while(true){
             long IPG = server.packetPairIPG(sH,sT);
-	    System.out.println(IPG);
+	        System.out.println(IPG);
         }
+
     }
 
 }
