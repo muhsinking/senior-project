@@ -12,7 +12,7 @@ public class UDPClient extends UDPSendReceive{
     }
 
     //returns time difference between two packet receipts, the "intra-probe gap", in nanoseconds
-    public long packetPairIPG(int sizeH, int sizeT, InetAddress IP, int port) throws IOException {
+    public void packetPairIPG(int sizeH, int sizeT, InetAddress IP, int port) throws IOException {
         byte[]  headTx = new byte[sizeH],
                 tailTx = new byte[sizeT];
         DatagramPacket headRx, tailRx;
@@ -20,12 +20,12 @@ public class UDPClient extends UDPSendReceive{
         send(headTx, IP, port);
         send(tailTx, IP, port);
 
-        headRx = receive(sizeH);
-        long headRxTime = System.nanoTime();
-        tailRx = receive(sizeT);
-        long tailRxTime = System.nanoTime();
-
-        long intraProbeGap = (tailRxTime-headRxTime);
-        return intraProbeGap;
+//        headRx = receive(sizeH);
+//        long headRxTime = System.nanoTime();
+//        tailRx = receive(sizeT);
+//        long tailRxTime = System.nanoTime();
+//
+//        long intraProbeGap = (tailRxTime-headRxTime);
+//        return intraProbeGap;
     }
 }
