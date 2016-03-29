@@ -44,7 +44,7 @@ public class DebugClient {
                 client.packetPairIPG(sH, sT, IP, 9876);
                 Thread.sleep(2,0);
             }
-            System.out.println("Head " + (sH+header) + " bytes\tTail " + (sT+header) + " bytes\tIntra-probe gap " + results[i] + " " + resolution + "seconds");
+//            System.out.println("Head " + (sH+header) + " bytes\tTail " + (sT+header) + " bytes\tIntra-probe gap " + results[i] + " " + resolution + "seconds");
         }
 
         client.socket.close();
