@@ -21,7 +21,10 @@ public class OWServer {
         UDPServer server = new UDPServer(9876);
         int header = 42;
         PrintWriter writer = new PrintWriter("AvgIPG.txt", "UTF-8");
+
         // main server loop, continually accepts new packet trains
+
+
 
 
         while(true){

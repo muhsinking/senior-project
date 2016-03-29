@@ -28,7 +28,6 @@ public class OWClient {
 
 
         client = new UDPClient();
-        control = new TCPClient(address,6789);
 
         int[] results = new int[numTrains];
 
@@ -41,6 +40,7 @@ public class OWClient {
 
         // primary experimental loop
         for (int i = 0; i < numTrains; i++) {
+            control = new TCPClient(address,6789);
             // send control variables to server
             control.send(control.socket, trainLength);
             control.send(control.socket, sH);
@@ -52,8 +52,8 @@ public class OWClient {
             }
 
             // reduce packet size by 100 bytes for each successive train
-            sH -= 100;
-            sT -= 100;
+            sH -= 64;
+//            sT -= 100;
         }
 
         client.socket.close();
