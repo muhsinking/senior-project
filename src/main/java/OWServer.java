@@ -25,10 +25,8 @@ public class OWServer {
 
         // main server loop, continually accepts new packet trains
 
-
-
-
         while(true){
+            // receive control variables from client
             Socket connection = control.socket.accept();
             int trainLength = control.receive(connection);
             int sH = control.receive(connection);
@@ -48,7 +46,6 @@ public class OWServer {
 	    int whatever = control.receive(connection);
 
             sum /= numValid;
-            //sum /= div;
             System.out.print("Intra-probe gap " + sum/div + " " + "micro" + "seconds");
             writer.println(sum);
         }
@@ -56,6 +53,10 @@ public class OWServer {
     }
 
     public static boolean valid(long IPG, int sH, int sT){
+        int sTTrasmission = sT * 8 / 10; // estimated transmission time of the tail packet through a 10Mbps link
+        if(IPG < sTTrasmission){
+            return false;
+        }
         return true;
     }
 }
