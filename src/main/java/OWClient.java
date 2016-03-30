@@ -27,19 +27,16 @@ public class OWClient {
         int tDec = Integer.parseInt(args[6]);
         int IPGmicro = Integer.parseInt(args[7]);
         InetAddress IP = InetAddress.getByName(address);
-
         client = new UDPClient();
 
-        int[] results = new int[numTrains];
-
-        // find the roundtrip time gap to space future runs
+        // calculate inter-probe gap
         int IPGnano = IPGmicro * 1000;
         int IPGmilli = IPGnano / 1000000;
         IPGnano = IPGnano % 1000000;
-
         System.out.println("Inter-probe gap: " + ((IPGmilli*1000)+(IPGnano/1000)) + " microseconds.");
-        control = new TCPClient(address,6789);
+
         // send control variables to server
+        control = new TCPClient(address,6789);
         control.send(control.socket, numTrains);
         control.send(control.socket, trainLength);
         control.send(control.socket, sH);

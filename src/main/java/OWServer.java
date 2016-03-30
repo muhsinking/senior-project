@@ -53,9 +53,7 @@ public class OWServer {
                 sH -= hDec;
                 sT -= tDec;
             }
-
         }
-
     }
 
     public static boolean valid(long IPG, int sH, int sT){
