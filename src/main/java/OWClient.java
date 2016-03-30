@@ -32,9 +32,10 @@ public class OWClient {
         int[] results = new int[numTrains];
 
         // find the roundtrip time gap to space future runs
-        int IPGnano = IPGmicro * 1000;
-        int IPGmilli = IPGnano / 1000000;
-        IPGnano = IPGnano % 1000000;
+        // int IPGnano = IPGmicro * 1000;
+        int IPGmilli = IPGmicro / 1000;
+        //IPGnano = IPGnano % 1000000;
+	int IPGnano = 0;
 
         System.out.println("Inter-probe gap: " + ((IPGmilli*1000)+(IPGnano/1000)) + " microseconds.");
 
@@ -52,8 +53,9 @@ public class OWClient {
             }
 
             // reduce packet size by 100 bytes for each successive train
-            sH -= 64;
-//            sT -= 100;
+            sH -= 100;
+            sT -= 100;
+	    control.send(control.socket, 0);
         }
 
         client.socket.close();
