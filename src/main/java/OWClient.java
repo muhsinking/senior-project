@@ -1,15 +1,6 @@
 import java.io.IOException;
 import java.net.InetAddress;
 
-/*
-        IP addr
-        train length (# of pairs)
-        # trains
-        size of Ph	(64 bytes default)
-        size of Pt 	(1500 bytes default)
-        resolution
-*/
-
 public class OWClient {
 
     private static UDPClient client;

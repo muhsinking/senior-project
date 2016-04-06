@@ -5,25 +5,14 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
-  /*
-
-    parameters to receive
-        train length
-        # of trains
-        size of Ph
-        size of Pt
-
-     */
-
 public class OWServer {
     public static void main(String[] args) throws IOException {
         TCPServer control = new TCPServer(6789);
         UDPServer server = new UDPServer(9876);
         int header = 42, div = 1000;
-//        PrintWriter writer = new PrintWriter("AvgIPG.txt", "UTF-8");
+        PrintWriter writer = new PrintWriter("AvgIPG.txt", "UTF-8");
 
         // main server loop, continually accepts new packet train series
-
         while(true){
             // receive control variables from client
             Socket connection = control.socket.accept();
@@ -48,7 +37,7 @@ public class OWServer {
                 }
 
                 sum /= numValid;
-//                writer.println(sum);
+                writer.println(sum);
                 System.out.print("Intra-probe gap " + sum/div + " " + "micro" + "seconds");
                 sH -= hDec;
                 sT -= tDec;
