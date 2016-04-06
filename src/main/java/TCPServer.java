@@ -8,17 +8,6 @@ public class TCPServer {
 
     ServerSocket socket;
 
-
-    /*
-
-    parameters to receive
-        train length
-        # of trains
-        size of Ph
-        size of Pt
-
-     */
-
     TCPServer(int sock) throws IOException {
         socket = new ServerSocket(sock);
     }

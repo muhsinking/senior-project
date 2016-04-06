@@ -7,16 +7,6 @@ import java.net.*;
 public class TCPClient {
     Socket socket;
 
-    /*
-
-    send parameters to server
-        train length
-        # of trains
-        size of Ph
-        size of Pt
-
-     */
-
     TCPClient(String address, int sock) throws IOException {
         this.socket = new Socket(address, sock);
     }
