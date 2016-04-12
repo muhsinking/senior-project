@@ -7,14 +7,12 @@
 public class TrafficSim {
     int packetSize;
     int linkSpeed;
-    int clock;
     int spacing;
     int delay;
 
     public TrafficSim(int size, int speed){
         packetSize = size;
         linkSpeed = speed;
-        clock = 0;
         spacing = (packetSize*8)/linkSpeed;
         delay = 0;
     }

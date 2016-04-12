@@ -12,16 +12,13 @@ import java.util.List;
 public class CollisionSim {
     public static void main(String[] args){
         LinkedList<Integer> queue = new LinkedList<Integer>();
-//        int queueLength = 0;
         int OutputLC = 10;
-        int clock = 0;
 
-        TrafficSim ct1 = new TrafficSim(64,1);
-        TrafficSim ct2 = new TrafficSim(64,1);
-        TrafficSim ct3 = new TrafficSim(64,1);
+        TrafficSim ct1 = new TrafficSim(500,5);
+        TrafficSim ct2 = new TrafficSim(306,2);
+        TrafficSim ct3 = new TrafficSim(71,1);
 
         while(true){
-            clock ++;
             if(queue.size() > 0){
                 int tempLC = OutputLC;
                 while(queue.size() > 0 && tempLC > 0){
