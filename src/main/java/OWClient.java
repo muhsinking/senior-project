@@ -38,6 +38,7 @@ public class OWClient {
         // primary experimental loop
         for (int i = 0; i < numTrains; i++) {
             for (int j = 0; j < trainLength; j++) {
+
                 client.packetPairIPG(sH, sT, IP, 9876);
                 Thread.sleep(IPGmilli,IPGnano);
             }
