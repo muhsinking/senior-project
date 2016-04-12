@@ -13,10 +13,13 @@ public class CollisionSim {
     public static void main(String[] args){
         LinkedList<Integer> queue = new LinkedList<Integer>();
         int OutputLC = 10;
+        int elapsedTime = 0;
+        TrafficSim ct1 = new TrafficSim(64,1);
+        TrafficSim ct2 = new TrafficSim(64,1);
+        TrafficSim ct3 = new TrafficSim(64,1);
 
-        TrafficSim ct1 = new TrafficSim(500,5);
-        TrafficSim ct2 = new TrafficSim(306,2);
-        TrafficSim ct3 = new TrafficSim(71,1);
+        int last = 0;
+        int queueSize = 0;
 
         while(true){
             if(queue.size() > 0){
@@ -38,13 +41,16 @@ public class CollisionSim {
             int packet2 = ct2.step();
             int packet3 = ct3.step();
 
-            if(packet1 > 0){
-                queue.add(packet1);
-            }
+            if(packet1 > 0) queue.add(packet1);
             if(packet2 > 0) queue.add(packet2);
             if(packet3 > 0) queue.add(packet1);
 
-            System.out.println("OHQ: " + queue.size());
+            queueSize = queue.size() > 0 ? queue.size() - 1 : 0;
+            if(queueSize != last)
+                System.out.println(elapsedTime + " microseconds, OHQ = " + queueSize);
+
+            last = queueSize;
+            elapsedTime++;
         }
 
     }
