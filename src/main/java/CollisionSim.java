@@ -17,9 +17,9 @@ public class CollisionSim {
         LinkedList<List<Integer>> queue = new LinkedList<List<Integer>>();
         int OutputLC = 10;
         int elapsedTime = 0;
-        TrafficSim ct1 = new TrafficSim(65,1);
-        TrafficSim ct2 = new TrafficSim(65,1);
-        TrafficSim ct3 = new TrafficSim(65,1);
+        TrafficSim ct1 = new TrafficSim(65,2);
+        TrafficSim ct2 = new TrafficSim(65,2);
+        TrafficSim ct3 = new TrafficSim(65,2);
         ProbeSim probe = new ProbeSim(64, 1500, 10000, 2470);
 
         int last = 0;
@@ -30,6 +30,7 @@ public class CollisionSim {
         int IPGCounter = 0;
         int probeCounter = 0;
         int reducedIPGCounter = 0;
+        int compressionTotal = 0;
 
 
         for(int i = 0; i < runs; i++){
@@ -57,7 +58,11 @@ public class CollisionSim {
                         }
                         else if(packet.get(1) == 1500*8){
                             System.out.println(elapsedTime + " microseconds, Intra-probe gap: " + IPGCounter + " microseconds.");
-                            if(IPGCounter < 3618) reducedIPGCounter++;
+                            if(IPGCounter < 3618){
+                                reducedIPGCounter++;
+                                compressionTotal += 3618 - IPGCounter;
+                            }
+
                             probeCounter++;
                             IPGCounting = false;
                             IPGCounter = 0;
@@ -115,7 +120,7 @@ public class CollisionSim {
         double percentZeroTime = (double)zeroTime/runs * 100;
         System.out.println("percentage of time with zero queue: " + percentZeroTime);
         System.out.println("Intra-probe gap reduced for " + reducedIPGCounter + " out of " + probeCounter + " probes.");
-
+        System.out.println("Average compression = " + compressionTotal/reducedIPGCounter);
     }
 
 
