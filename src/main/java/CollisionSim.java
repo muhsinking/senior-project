@@ -17,10 +17,10 @@ public class CollisionSim {
         LinkedList<List<Integer>> queue = new LinkedList<List<Integer>>();
         int OutputLC = 10;
         int elapsedTime = 0;
-        TrafficSim ct1 = new TrafficSim(100,2);
-        TrafficSim ct2 = new TrafficSim(100,2);
-        TrafficSim ct3 = new TrafficSim(100,2);
-        ProbeSim probe = new ProbeSim(64, 1500, 5000, 2470);
+        TrafficSim ct1 = new TrafficSim(65,1);
+        TrafficSim ct2 = new TrafficSim(65,1);
+        TrafficSim ct3 = new TrafficSim(65,1);
+        ProbeSim probe = new ProbeSim(64, 1500, 10000, 2470);
 
         int last = 0;
         int queueSize = 0;
@@ -28,6 +28,8 @@ public class CollisionSim {
         int runs = 10000000;
         boolean IPGCounting = false;
         int IPGCounter = 0;
+        int probeCounter = 0;
+        int reducedIPGCounter = 0;
 
 
         for(int i = 0; i < runs; i++){
@@ -50,12 +52,15 @@ public class CollisionSim {
 
                     // if it was completely processed, loop back around, and readout intra probe gap if applicable
                     else{
-                        if(packet.get(1) == 64){
+                        if(packet.get(1) == 64*8){
                             IPGCounting = true;
                         }
-                        else if(packet.get(1) == 1500){
-                            System.out.println("Intra-probe gap: " + IPGCounter + " microseconds.");
+                        else if(packet.get(1) == 1500*8){
+                            System.out.println(elapsedTime + " microseconds, Intra-probe gap: " + IPGCounter + " microseconds.");
+                            if(IPGCounter < 3618) reducedIPGCounter++;
+                            probeCounter++;
                             IPGCounting = false;
+                            IPGCounter = 0;
                         }
                         tempLC = dif;
                     }
@@ -92,9 +97,10 @@ public class CollisionSim {
 
             if(probePacket > 0){
                 List<Integer> pp= new ArrayList<Integer>();
-                pp.add(0,probePacket);
-                pp.add(1,probePacket);
+                pp.add(probePacket);
+                pp.add(probePacket);
                 queue.add(pp);
+                System.out.println(elapsedTime + " microseconds, added packet of size " + probePacket);
             }
 
             queueSize = queue.size() > 0 ? queue.size() - 1 : 0;
@@ -103,13 +109,12 @@ public class CollisionSim {
 //            if(queueSize != last)
 //                System.out.println(elapsedTime + " microseconds, OHQ = " + queueSize);
 
-
-
             last = queueSize;
             elapsedTime++;
         }
         double percentZeroTime = (double)zeroTime/runs * 100;
         System.out.println("percentage of time with zero queue: " + percentZeroTime);
+        System.out.println("Intra-probe gap reduced for " + reducedIPGCounter + " out of " + probeCounter + " probes.");
 
     }
 
