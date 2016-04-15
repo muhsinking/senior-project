@@ -7,22 +7,22 @@
 public class TrafficSim {
     int packetSize;
     int linkSpeed;
-    int spacing;
     int delay;
+    int intraPacketGap;
 
     public TrafficSim(int size, int speed){
         packetSize = size;
         linkSpeed = speed;
-        spacing = (packetSize*8)/linkSpeed;
-        delay = 0;
+        intraPacketGap = (packetSize*8)/linkSpeed;
+        delay = 1;
     }
 
     public int step(){
+        delay --;
         if(delay == 0){
-            delay += spacing*2;
+            delay += intraPacketGap;
             return packetSize*8;
         }
-        delay --;
         return -1;
     }
 }
