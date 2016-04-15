@@ -9,7 +9,7 @@ public class ProbeSim {
     int headDelay;
     int tailDelay;
 
-    // defaults: 64, 1500, 5000, 2470
+    // suggested values: 64, 1500, 5000, 2470
     public ProbeSim(int hs, int ts, int interPG, int intraPG){
         headDelay = 1;
         tailDelay = intraProbeGap+1;
