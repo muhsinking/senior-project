@@ -11,21 +11,12 @@ public class UDPClient extends UDPSendReceive{
         socket = new DatagramSocket();
     }
 
-    //returns time difference between two packet receipts, the "intra-probe gap", in nanoseconds
+    // sends two probing packets of given sizes to the server application at the given address
     public void packetPairIPG(int sizeH, int sizeT, InetAddress IP, int port) throws IOException {
         byte[]  headTx = new byte[sizeH],
                 tailTx = new byte[sizeT];
-        DatagramPacket headRx, tailRx;
 
         send(headTx, IP, port);
         send(tailTx, IP, port);
-
-//        headRx = receive(sizeH);
-//        long headRxTime = System.nanoTime();
-//        tailRx = receive(sizeT);
-//        long tailRxTime = System.nanoTime();
-//
-//        long intraProbeGap = (tailRxTime-headRxTime);
-//        return intraProbeGap;
     }
 }

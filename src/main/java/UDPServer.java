@@ -20,9 +20,6 @@ public class UDPServer extends UDPSendReceive{
             long headRxTime = System.nanoTime();
             DatagramPacket tail = receive(sizeT);
             long tailRxTime = System.nanoTime();
-
-//            socket.send(head);
-//            socket.send(tail);
             intraProbeGap = (tailRxTime - headRxTime);
         }
         catch (IOException err){
