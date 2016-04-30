@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,11 +21,12 @@ public class RouterSimulator {
         int elapsedTime = 0;
         int headSize = 64;
         int tailSize = 1500;
-        TrafficSimulator ct1 = new TrafficSimulator(200,2);
-        TrafficSimulator ct2 = new TrafficSimulator(200,2);
-        TrafficSimulator ct3 = new TrafficSimulator(200,2);
+        TrafficSimulator ct1 = new TrafficSimulator(100,3);
+        TrafficSimulator ct2 = new TrafficSimulator(100,3);
+        TrafficSimulator ct3 = new TrafficSimulator(100,3);
         ProbeSimulator probe = new ProbeSimulator(headSize, tailSize, 10000);
 
+        // dispersion gap plus transmission time of tail packet (-1 to truncate)
         int IPGTheoretical = (tailSize*8/10) - (headSize*8/10) + (tailSize*8/10) - 1;
         System.out.println(IPGTheoretical);
         int last = 0;
@@ -37,7 +39,8 @@ public class RouterSimulator {
         int reducedIPGCounter = 0;
         int compressionTotal = 0;
         int headQueueSize = 0;
-        int headQueueSizeTotal = 0;
+        // tracks the total amount of dispersion for each size of queue at heading packet entry
+        int[][] queueSizeCompressionTotals = new int[10][2];
 
 
         for(int i = 0; i < runs; i++){
@@ -64,15 +67,21 @@ public class RouterSimulator {
                         if(packet.get(1) == HEADID){
                             IPGCounting = true;
                             headQueueSize = packet.get(2);
-                            headQueueSizeTotal += headQueueSize;
+
                         }
                         // if it was a trailing packet, finish measuring the intra-probe gap
                         else if(packet.get(1) == TAILID){
-                            System.out.println(elapsedTime + " microseconds, Intra-probe gap: " + IPGCounter + " microseconds.");
+//                            System.out.println(elapsedTime + " microseconds, Intra-probe gap: " + IPGCounter + " microseconds.");
+//                            System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
+//                                    ", queue size at head entry: " + headQueueSize);
 
-                            System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) + ", queue size at head entry: " +
-                                    headQueueSize);
                             if(IPGCounter < IPGTheoretical){
+                                System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
+                                        ", queue size at head entry: " + headQueueSize);
+
+                                queueSizeCompressionTotals[headQueueSize-1][0] ++;
+                                queueSizeCompressionTotals[headQueueSize-1][1] += IPGTheoretical - IPGCounter;
+
                                 reducedIPGCounter++;
                                 compressionTotal += IPGTheoretical - IPGCounter;
                             }
@@ -108,12 +117,12 @@ public class RouterSimulator {
                 queue.add(p2);
             }
 
-            if(packet3 > 0){
-                List<Integer> p3= new ArrayList<Integer>();
-                p3.add(packet3);
-                p3.add(TRAFFICID);
-                queue.add(p3);
-            }
+//            if(packet3 > 0){
+//                List<Integer> p3= new ArrayList<Integer>();
+//                p3.add(packet3);
+//                p3.add(TRAFFICID);
+//                queue.add(p3);
+//            }
 
             if(probePacket > 0){
                 List<Integer> pp= new ArrayList<Integer>();
@@ -141,6 +150,12 @@ public class RouterSimulator {
         System.out.println("Intra-probe gap reduced for " + reducedIPGCounter + " out of " + probeCounter + " probes.");
         if(reducedIPGCounter > 0){
             System.out.println("Average compression = " + compressionTotal/reducedIPGCounter);
+        }
+
+        for(int i = 0; i < queueSizeCompressionTotals.length; i++){
+            if(queueSizeCompressionTotals[i][0] > 0){
+                System.out.println("Average compression for queue of length " + (i+1) + " = " + queueSizeCompressionTotals[i][1] / queueSizeCompressionTotals[i][0]);
+            }
         }
 
     }
