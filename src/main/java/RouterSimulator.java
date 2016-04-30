@@ -26,8 +26,8 @@ public class RouterSimulator {
         TrafficSimulator ct3 = new TrafficSimulator(100,3);
         ProbeSimulator probe = new ProbeSimulator(headSize, tailSize, 10000);
 
-        // dispersion gap plus transmission time of tail packet (-1 to truncate)
-        int IPGTheoretical = (tailSize*8/10) - (headSize*8/10) + (tailSize*8/10) - 1;
+        // dispersion gap plus transmission time of tail packet
+        int IPGTheoretical = (tailSize*8/10) - (headSize*8/10) + (tailSize*8/10);
         System.out.println(IPGTheoretical);
         int last = 0;
         int queueSize = 0;
@@ -77,7 +77,7 @@ public class RouterSimulator {
 
                             if(IPGCounter < IPGTheoretical){
                                 System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
-                                        ", queue size at head entry: " + headQueueSize);
+                                        ", packets ahead at head entry: " + headQueueSize);
 
                                 queueSizeCompressionTotals[headQueueSize-1][0] ++;
                                 queueSizeCompressionTotals[headQueueSize-1][1] += IPGTheoretical - IPGCounter;
