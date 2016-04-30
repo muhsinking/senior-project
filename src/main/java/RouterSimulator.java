@@ -92,7 +92,7 @@ public class RouterSimulator {
 
                                 reducedIPGCounter++;
                                 compressionTotal += IPGTheoretical - IPGCounter;
-                                trueDelayTotal += headQueueSize;
+                                trueDelayTotal += headQueueDelay;
                             }
 
                             probeCounter++;
@@ -159,15 +159,14 @@ public class RouterSimulator {
         System.out.println("percentage of time with zero queue: " + percentZeroTime);
         System.out.println("Intra-probe gap reduced for " + reducedIPGCounter + " out of " + probeCounter + " probes.");
         if(reducedIPGCounter > 0){
-            System.out.println("Average compression = " + compressionTotal/reducedIPGCounter);
+            System.out.println("Average compression: " + compressionTotal/reducedIPGCounter + ", average true delay: " + trueDelayTotal/reducedIPGCounter);
         }
 
         for(int i = 0; i < queueSizeCompressionTotals.length; i++){
             if(queueSizeCompressionTotals[i][0] > 0){
-                System.out.println("Average compression for queue of length " + (i+1) + " = " + queueSizeCompressionTotals[i][1] / queueSizeCompressionTotals[i][0]);
+                System.out.println("Average compression for queue of length " + (i+1) + ": " + queueSizeCompressionTotals[i][1] / queueSizeCompressionTotals[i][0]);
             }
         }
-
     }
 
 
