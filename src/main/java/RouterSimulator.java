@@ -38,7 +38,10 @@ public class RouterSimulator {
         int probeCounter = 0;
         int reducedIPGCounter = 0;
         int compressionTotal = 0;
+        int trueDelayTotal = 0;
         int headQueueSize = 0;
+        int headQueueDelayCounter = 0;
+        int headQueueDelay = 0;
         // tracks the total amount of dispersion for each size of queue at heading packet entry
         int[][] queueSizeCompressionTotals = new int[10][2];
 
@@ -53,6 +56,8 @@ public class RouterSimulator {
                 while(queue.size() > 0 && tempLC > 0){
                     List<Integer> packet = queue.remove();
                     int dif = packet.get(0) - tempLC;
+                    headQueueDelayCounter ++;
+
 
                     // if packet was not completely processed, put it back into the queue
                     if(dif > 0){
@@ -67,6 +72,8 @@ public class RouterSimulator {
                         if(packet.get(1) == HEADID){
                             IPGCounting = true;
                             headQueueSize = packet.get(2);
+                            // actual queueing delay is the time it took from entering the queue to leaving the queue, minus the transmission time of the head
+                            headQueueDelay = headQueueDelayCounter - (headSize*8/10);
 
                         }
                         // if it was a trailing packet, finish measuring the intra-probe gap
@@ -76,14 +83,16 @@ public class RouterSimulator {
 //                                    ", queue size at head entry: " + headQueueSize);
 
                             if(IPGCounter < IPGTheoretical){
+
                                 System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
-                                        ", packets ahead at head entry: " + headQueueSize);
+                                        ", actual queueing delay of head: " + headQueueDelay + " packets ahead at head entry: " + headQueueSize);
 
                                 queueSizeCompressionTotals[headQueueSize-1][0] ++;
                                 queueSizeCompressionTotals[headQueueSize-1][1] += IPGTheoretical - IPGCounter;
 
                                 reducedIPGCounter++;
                                 compressionTotal += IPGTheoretical - IPGCounter;
+                                trueDelayTotal += headQueueSize;
                             }
 
                             probeCounter++;
@@ -130,6 +139,7 @@ public class RouterSimulator {
                 if (probePacket == headSize*8){
                     pp.add(HEADID);
                     pp.add(queue.size()); // add the current size of the queue when the heading packet enters
+                    headQueueDelayCounter = 0;
                 }
                 else pp.add(TAILID);
                 queue.add(pp);
