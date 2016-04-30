@@ -1,9 +1,7 @@
+
 import java.io.IOException;
 import java.net.*;
 
-/**
- * Created by muhsinking on 11/9/15.
- */
 public class UDPSendReceive {
     DatagramSocket socket;
 

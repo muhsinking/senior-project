@@ -2,25 +2,25 @@
  * Created by muhsinking on 4/12/16.
  */
 
-// simulates a cross traffic stream
-// delay = packet size / bit rate
-public class TrafficSim {
+
+public class TrafficSimulator {
     int packetSize;
     int linkSpeed;
     int delay;
-    int intraPacketGap;
+    int interPacketGap;
 
-    public TrafficSim(int size, int speed){
+    public TrafficSimulator(int size, int speed){
         packetSize = size;
         linkSpeed = speed;
-        intraPacketGap = (packetSize*8)/linkSpeed;
+        interPacketGap = (packetSize*8)/linkSpeed;
         delay = 1;
     }
 
+    // returns in bits the size of the frame that is put on the output link, or -1 if no such frame is sent
     public int step(){
         delay --;
         if(delay == 0){
-            delay += intraPacketGap;
+            delay += interPacketGap;
             return packetSize*8;
         }
         return -1;

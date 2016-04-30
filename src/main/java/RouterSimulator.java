@@ -1,27 +1,32 @@
-import com.sun.org.glassfish.external.probe.provider.annotations.Probe;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by muhsinking on 4/11/16.
- */
-
 /*
-    simulates the collision of cross stream
+    simulates the an output queue in a router, supporting up to three cross traffic streams
+    also simulates the probe-gap model for measuring queueing delay
     each loop represents one microsecond
- */
-public class CollisionSim {
+*/
+
+public class RouterSimulator {
+    public static final int TRAFFICID = 0;
+    public static final int HEADID = 1;
+    public static final int TAILID = 2;
     public static void main(String[] args){
         LinkedList<List<Integer>> queue = new LinkedList<List<Integer>>();
+
         int OutputLC = 10;
         int elapsedTime = 0;
-        TrafficSim ct1 = new TrafficSim(65,3);
-        TrafficSim ct2 = new TrafficSim(65,3);
-        TrafficSim ct3 = new TrafficSim(65,3);
-        ProbeSim probe = new ProbeSim(64, 1500, 10000, 2470);
+        int headSize = 64;
+        int tailSize = 1500;
+        TrafficSimulator ct1 = new TrafficSimulator(200,2);
+        TrafficSimulator ct2 = new TrafficSimulator(200,2);
+        TrafficSimulator ct3 = new TrafficSimulator(200,2);
+        ProbeSimulator probe = new ProbeSimulator(headSize, tailSize, 10000);
 
+        int IPGTheoretical = (tailSize*8/10) - (headSize*8/10) + (tailSize*8/10) - 1;
+        System.out.println(IPGTheoretical);
         int last = 0;
         int queueSize = 0;
         int zeroTime = 0;
@@ -31,6 +36,8 @@ public class CollisionSim {
         int probeCounter = 0;
         int reducedIPGCounter = 0;
         int compressionTotal = 0;
+        int headQueueSize = 0;
+        int headQueueSizeTotal = 0;
 
 
         for(int i = 0; i < runs; i++){
@@ -53,20 +60,28 @@ public class CollisionSim {
 
                     // if it was completely processed, loop back around, and readout intra probe gap if applicable
                     else{
-                        if(packet.get(1) == 64*8){
+                        // if it was a heading packet, begin measuring the intra-probe gap
+                        if(packet.get(1) == HEADID){
                             IPGCounting = true;
+                            headQueueSize = packet.get(2);
+                            headQueueSizeTotal += headQueueSize;
                         }
-                        else if(packet.get(1) == 1500*8){
+                        // if it was a trailing packet, finish measuring the intra-probe gap
+                        else if(packet.get(1) == TAILID){
                             System.out.println(elapsedTime + " microseconds, Intra-probe gap: " + IPGCounter + " microseconds.");
-                            if(IPGCounter < 3618){
+
+                            System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) + ", queue size at head entry: " +
+                                    headQueueSize);
+                            if(IPGCounter < IPGTheoretical){
                                 reducedIPGCounter++;
-                                compressionTotal += 3618 - IPGCounter;
+                                compressionTotal += IPGTheoretical - IPGCounter;
                             }
 
                             probeCounter++;
                             IPGCounting = false;
                             IPGCounter = 0;
                         }
+                        // process dif bits in the next iteration
                         tempLC = dif;
                     }
                 }
@@ -81,29 +96,33 @@ public class CollisionSim {
 
             if(packet1 > 0){
                 List<Integer> p1= new ArrayList<Integer>();
-                p1.add(0,packet1);
-                p1.add(1,packet2);
+                p1.add(packet1);
+                p1.add(TRAFFICID);
                 queue.add(p1);
             }
 
             if(packet2 > 0){
                 List<Integer> p2= new ArrayList<Integer>();
-                p2.add(0,packet2);
-                p2.add(1,packet2);
+                p2.add(packet2);
+                p2.add(TRAFFICID);
                 queue.add(p2);
             }
 
             if(packet3 > 0){
                 List<Integer> p3= new ArrayList<Integer>();
-                p3.add(0,packet3);
-                p3.add(1,packet3);
+                p3.add(packet3);
+                p3.add(TRAFFICID);
                 queue.add(p3);
             }
 
             if(probePacket > 0){
                 List<Integer> pp= new ArrayList<Integer>();
                 pp.add(probePacket);
-                pp.add(probePacket);
+                if (probePacket == headSize*8){
+                    pp.add(HEADID);
+                    pp.add(queue.size()); // add the current size of the queue when the heading packet enters
+                }
+                else pp.add(TAILID);
                 queue.add(pp);
 //                System.out.println(elapsedTime + " microseconds, added packet of size " + probePacket);
             }
