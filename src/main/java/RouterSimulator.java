@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /*
     simulates the an output queue in a router, supporting up to three cross traffic streams
@@ -14,16 +16,21 @@ public class RouterSimulator {
     public static final int TRAFFICID = 0;
     public static final int HEADID = 1;
     public static final int TAILID = 2;
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
+
+        FileWriter writer1 = new FileWriter("simulationQL1.csv");
+        FileWriter writer2 = new FileWriter("simulationQL2.csv");
+        FileWriter writer3 = new FileWriter("simulationQL3.csv");
+
         LinkedList<List<Integer>> queue = new LinkedList<List<Integer>>();
 
         int OutputLC = 10;
         int elapsedTime = 0;
         int headSize = 64;
         int tailSize = 1500;
-        TrafficSimulator ct1 = new TrafficSimulator(100,3);
-        TrafficSimulator ct2 = new TrafficSimulator(100,3);
-        TrafficSimulator ct3 = new TrafficSimulator(100,3);
+        TrafficSimulator ct1 = new TrafficSimulator(64,4);
+        TrafficSimulator ct2 = new TrafficSimulator(100,1);
+        TrafficSimulator ct3 = new TrafficSimulator(150,2);
         ProbeSimulator probe = new ProbeSimulator(headSize, tailSize, 10000);
 
         // dispersion gap plus transmission time of tail packet
@@ -45,6 +52,10 @@ public class RouterSimulator {
         // tracks the total amount of dispersion for each size of queue at heading packet entry
         int[][] queueSizeCompressionTotals = new int[10][2];
 
+        // set up CSV headers
+        writer1.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
+        writer2.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
+        writer3.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
 
         for(int i = 0; i < runs; i++){
             // the first position in the queue represents the output interface
@@ -82,10 +93,16 @@ public class RouterSimulator {
 //                            System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
 //                                    ", queue size at head entry: " + headQueueSize);
 
-                            if(IPGCounter < IPGTheoretical){
+                            if(IPGCounter < IPGTheoretical && headQueueSize > 0){
 
                                 System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
                                         ", actual queueing delay of head: " + headQueueDelay + " packets ahead at head entry: " + headQueueSize);
+
+
+                                // output to appropriate CSV file based on queue length
+                                if(headQueueSize == 1) writer1.append(elapsedTime + "," + (IPGTheoretical-IPGCounter) + "," + headQueueDelay + "," + headQueueSize + "\n");
+                                if(headQueueSize == 2) writer2.append(elapsedTime + "," + (IPGTheoretical-IPGCounter) + "," + headQueueDelay + "," + headQueueSize + "\n");
+                                if(headQueueSize == 3) writer3.append(elapsedTime + "," + (IPGTheoretical-IPGCounter) + "," + headQueueDelay + "," + headQueueSize + "\n");
 
                                 queueSizeCompressionTotals[headQueueSize-1][0] ++;
                                 queueSizeCompressionTotals[headQueueSize-1][1] += IPGTheoretical - IPGCounter;
@@ -126,12 +143,12 @@ public class RouterSimulator {
                 queue.add(p2);
             }
 
-//            if(packet3 > 0){
-//                List<Integer> p3= new ArrayList<Integer>();
-//                p3.add(packet3);
-//                p3.add(TRAFFICID);
-//                queue.add(p3);
-//            }
+            if(packet3 > 0){
+                List<Integer> p3= new ArrayList<Integer>();
+                p3.add(packet3);
+                p3.add(TRAFFICID);
+                queue.add(p3);
+            }
 
             if(probePacket > 0){
                 List<Integer> pp= new ArrayList<Integer>();
@@ -167,6 +184,14 @@ public class RouterSimulator {
                 System.out.println("Average compression for queue of length " + (i+1) + ": " + queueSizeCompressionTotals[i][1] / queueSizeCompressionTotals[i][0]);
             }
         }
+
+
+        writer1.flush();
+        writer1.close();
+        writer2.flush();
+        writer2.close();
+        writer3.flush();
+        writer3.close();
     }
 
 

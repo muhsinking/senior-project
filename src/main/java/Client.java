@@ -90,8 +90,6 @@ public class Client {
         }
         writer.close();
 
-
-
     }
 
     // given a resolution string, return the relevant divisor to get this unit from nanoseconds
