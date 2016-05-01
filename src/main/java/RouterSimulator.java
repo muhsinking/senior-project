@@ -49,6 +49,7 @@ public class RouterSimulator {
         int headQueueSize = 0;
         int headQueueDelayCounter = 0;
         int headQueueDelay = 0;
+        double errorTotal = 0;
         // tracks the total amount of dispersion for each size of queue at heading packet entry
         int[][] queueSizeCompressionTotals = new int[10][2];
 
@@ -56,6 +57,7 @@ public class RouterSimulator {
         writer1.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
         writer2.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
         writer3.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
+
 
         for(int i = 0; i < runs; i++){
             // the first position in the queue represents the output interface
@@ -89,10 +91,6 @@ public class RouterSimulator {
                         }
                         // if it was a trailing packet, finish measuring the intra-probe gap
                         else if(packet.get(1) == TAILID){
-//                            System.out.println(elapsedTime + " microseconds, Intra-probe gap: " + IPGCounter + " microseconds.");
-//                            System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
-//                                    ", queue size at head entry: " + headQueueSize);
-
                             if(IPGCounter < IPGTheoretical && headQueueSize > 0){
 
                                 System.out.println(elapsedTime + " microseconds, dispersion reduction: " + (IPGTheoretical - IPGCounter) +
@@ -103,6 +101,8 @@ public class RouterSimulator {
                                 if(headQueueSize == 1) writer1.append(elapsedTime + "," + (IPGTheoretical-IPGCounter) + "," + headQueueDelay + "," + headQueueSize + "\n");
                                 if(headQueueSize == 2) writer2.append(elapsedTime + "," + (IPGTheoretical-IPGCounter) + "," + headQueueDelay + "," + headQueueSize + "\n");
                                 if(headQueueSize == 3) writer3.append(elapsedTime + "," + (IPGTheoretical-IPGCounter) + "," + headQueueDelay + "," + headQueueSize + "\n");
+
+                                errorTotal += Math.abs(headQueueDelay - (IPGTheoretical - IPGCounter)) / (double) headQueueDelay * 100;
 
                                 queueSizeCompressionTotals[headQueueSize-1][0] ++;
                                 queueSizeCompressionTotals[headQueueSize-1][1] += IPGTheoretical - IPGCounter;
@@ -184,6 +184,8 @@ public class RouterSimulator {
                 System.out.println("Average compression for queue of length " + (i+1) + ": " + queueSizeCompressionTotals[i][1] / queueSizeCompressionTotals[i][0]);
             }
         }
+
+        System.out.println("Error: " + errorTotal/reducedIPGCounter + "%");
 
 
         writer1.flush();
