@@ -1,15 +1,14 @@
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.FileWriter;
 import java.io.IOException;
 
 /*
-    simulates the an output queue in a router, supporting up to three cross traffic streams
+    simulates a single output queue in a router, supporting up to three cross traffic streams
     also simulates the probe-gap model for measuring queueing delay
-    each loop represents one microsecond
+    each iteration simulates one microsecond
 */
 
 public class RouterSimulator {
@@ -64,9 +63,10 @@ public class RouterSimulator {
 
         for(int i = 0; i < runs; i++){
             // the first position in the queue represents the output interface
-            // each member of the queue is a list of two values:
+            // each member of the queue contains two values:
             // the amount of the packet that still needs to be processed (index 0)
             // and the total size of the packet (index 1)
+            // heading packets in a probe include a third value: the size of the queue when they first enter
             if(queue.size() > 0){
                 int tempLC = OutputLC;
                 while(queue.size() > 0 && tempLC > 0){
@@ -75,14 +75,13 @@ public class RouterSimulator {
                     headQueueDelayCounter ++;
 
 
-                    // if packet was not completely processed, put it back into the queue
+                    // if packet was not completely processed given the available link capacity, put it back into the queue
                     if(dif > 0){
                         packet.set(0,dif);
                         queue.addFirst(packet);
                         tempLC = 0;
                     }
 
-                    // if it was completely processed, loop back around, and readout intra probe gap if applicable
                     else{
                         // if it was a heading packet, begin measuring the intra-probe gap
                         if(packet.get(1) == HEADID){
@@ -119,7 +118,7 @@ public class RouterSimulator {
                             IPGCounting = false;
                             IPGCounter = 0;
                         }
-                        // process dif bits in the next iteration
+                        // continue loop with the remaining link capacity
                         tempLC = dif;
                     }
                 }
@@ -173,9 +172,8 @@ public class RouterSimulator {
 //                writer1.append(elapsedTime + "," + queueSize + "\n");
 //                System.out.println(elapsedTime + " microseconds, OHQ = " + queueSize);
 //            }
+//            last = queueSize;
 
-
-            last = queueSize;
             elapsedTime++;
         }
 
@@ -195,7 +193,6 @@ public class RouterSimulator {
 
         System.out.println("Error: " + errorTotal/reducedIPGCounter + "%");
 
-
         writer1.flush();
         writer1.close();
         writer2.flush();
@@ -203,7 +200,4 @@ public class RouterSimulator {
         writer3.flush();
         writer3.close();
     }
-
-
-
 }
