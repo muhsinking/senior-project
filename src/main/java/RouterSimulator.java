@@ -50,6 +50,7 @@ public class RouterSimulator {
         int headQueueDelayCounter = 0;
         int headQueueDelay = 0;
         double errorTotal = 0;
+
         // tracks the total amount of dispersion for each size of queue at heading packet entry
         int[][] queueSizeCompressionTotals = new int[10][2];
 
@@ -58,6 +59,8 @@ public class RouterSimulator {
         writer2.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
         writer3.append("time (micoseconds),dispersion reduction,actual delay,packets ahead at entry,\n");
 
+//        Uncomment to write queue length to file instead of dispersion reduction
+//        writer1.append("time (micoseconds),output queue length (number of packets)\n");
 
         for(int i = 0; i < runs; i++){
             // the first position in the queue represents the output interface
@@ -160,21 +163,26 @@ public class RouterSimulator {
                 }
                 else pp.add(TAILID);
                 queue.add(pp);
-//                System.out.println(elapsedTime + " microseconds, added packet of size " + probePacket);
             }
 
             queueSize = queue.size() > 0 ? queue.size() - 1 : 0;
             if(queueSize == 0) zeroTime++;
 
-//            if(queueSize != last)
+//            Uncomment to print queue size changes (and output to CSV)
+//            if(queueSize != last){
+//                writer1.append(elapsedTime + "," + queueSize + "\n");
 //                System.out.println(elapsedTime + " microseconds, OHQ = " + queueSize);
+//            }
+
 
             last = queueSize;
             elapsedTime++;
         }
+
         double percentZeroTime = (double)zeroTime/runs * 100;
         System.out.println("percentage of time with zero queue: " + percentZeroTime);
         System.out.println("Intra-probe gap reduced for " + reducedIPGCounter + " out of " + probeCounter + " probes.");
+
         if(reducedIPGCounter > 0){
             System.out.println("Average compression: " + compressionTotal/reducedIPGCounter + ", average true delay: " + trueDelayTotal/reducedIPGCounter);
         }
